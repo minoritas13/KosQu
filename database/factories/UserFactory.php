@@ -16,7 +16,6 @@ class UserFactory extends Factory
             'password' => bcrypt('password'), // default password
             'role' => $this->faker->randomElement(['admin', 'penyewa']),
             'no_hp' => $this->faker->phoneNumber(),
-            'alamat' => $this->faker->address(),
             'created_at' => now(),
             'updated_at' => now(),
         ];

@@ -30,20 +30,20 @@ class AuthController extends Controller
                 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&]).+$/',
                 'confirmed'
             ],
+            'no_hp' => ['required', 'string', 'min:10'],
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
+            'no_hp' => $request->no_hp,
             'password' => Hash::make($request->password),
             'role' => 'penyewa',
         ]);
 
-        event(new Registered($user)); // kirim email verifikasi
+        // kirim email verifikasi
 
-        Auth::login($user);
-
-        return redirect()->route('dashboard')->with('success', 'Akun berhasil dibuat! Silakan verifikasi email Anda.');
+        return redirect()->route('login.form')->with('success', 'Akun berhasil dibuat! Silakan Login.');
     }
 
     // Tampilkan form login
@@ -52,7 +52,6 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
-    // Proses login
     public function login(Request $request)
     {
         $request->validate([
@@ -63,18 +62,25 @@ class AuthController extends Controller
         if (Auth::attempt($request->only('email', 'password'), $request->filled('remember'))) {
             $request->session()->regenerate();
 
-            if (!Auth::user()->hasVerifiedEmail()) {
-                return redirect()->route('verification.notice')
-                    ->with('warning', 'Silakan verifikasi email terlebih dahulu.');
+            // Ambil user yang baru login
+            $user = Auth::user();
+
+            // Jika belum verifikasi email
+            if (!$user->hasVerifiedEmail()) {
+                // Kirim notifikasi peringatan
+                return redirect()->route('dashboard')
+                    ->with('warning', 'Anda berhasil login, tapi email belum diverifikasi. Silakan verifikasi sekarang.');
             }
 
-            return redirect()->route('dashboard');
+            // Jika sudah verifikasi
+            return redirect()->route('dashboard')
+                ->with('success', 'Selamat datang kembali, ' . $user->name . '!');
         }
 
-        return back()->withErrors([
-            'email' => 'Email atau password salah.',
-        ]);
+        // Jika login gagal
+        return back()->with('error', 'Email atau password salah.');
     }
+
 
     // Logout
     public function logout(Request $request)

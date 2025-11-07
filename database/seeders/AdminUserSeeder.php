@@ -18,7 +18,6 @@ class AdminUserSeeder extends Seeder
                 'name' => 'Administrator',
                 'email' => 'admin@example.com',
                 'no_hp' => '081368087522',
-                'alamat' => 'jl hj komarudin',
                 'password' => Hash::make('password123'), // ganti sesuai keinginan
                 'role' => 'admin', // pastikan field ini ada di tabel users
                 'email_verified_at' => now(), // langsung dianggap sudah verifikasi
