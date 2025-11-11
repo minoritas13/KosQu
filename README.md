@@ -51,7 +51,6 @@ Aplikasi KosQu menyediakan fitur sebagai berikut:
 - Processor: Intel Core i3  
 - RAM: 4 GB  
 - Storage: 250 GB  
-- Resolusi: 1366×768  
 
 ### 🧩 Software
 
