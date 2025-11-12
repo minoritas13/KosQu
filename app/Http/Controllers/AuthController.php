@@ -10,13 +10,13 @@ use App\Models\User;
 
 class AuthController extends Controller
 {
-    // Tampilkan form register
+    // Form register
     public function showRegister()
     {
         return view('auth.register');
     }
 
-    // Proses registrasi
+    // Proses register
     public function register(Request $request)
     {
         $request->validate([
@@ -41,17 +41,22 @@ class AuthController extends Controller
             'role' => 'penyewa',
         ]);
 
-        // kirim email verifikasi
+        // kirim email verifikasi otomatis
+        event(new Registered($user));
 
-        return redirect()->route('login.form')->with('success', 'Akun berhasil dibuat! Silakan Login.');
+        Auth::login($user);
+
+        return redirect()->route('verification.notice')
+            ->with('success', 'Akun berhasil dibuat! Silakan verifikasi email sebelum login.');
     }
 
-    // Tampilkan form login
+    // Form login
     public function showLogin()
     {
         return view('auth.login');
     }
 
+    // Proses login
     public function login(Request $request)
     {
         $request->validate([
@@ -62,25 +67,20 @@ class AuthController extends Controller
         if (Auth::attempt($request->only('email', 'password'), $request->filled('remember'))) {
             $request->session()->regenerate();
 
-            // Ambil user yang baru login
             $user = Auth::user();
 
-            // Jika belum verifikasi email
+            // Cek apakah email sudah diverifikasi
             if (!$user->hasVerifiedEmail()) {
-                // Kirim notifikasi peringatan
-                return redirect()->route('dashboard')
-                    ->with('warning', 'Anda berhasil login, tapi email belum diverifikasi. Silakan verifikasi sekarang.');
+                Auth::logout();
+                return redirect()->route('verification.notice')
+                    ->with('warning', 'Silakan verifikasi email terlebih dahulu sebelum login.');
             }
 
-            // Jika sudah verifikasi
-            return redirect()->route('dashboard')
-                ->with('success', 'Selamat datang kembali, ' . $user->name . '!');
+            return redirect()->route('dashboard')->with('success', 'Selamat datang kembali, ' . $user->name . '!');
         }
 
-        // Jika login gagal
         return back()->with('error', 'Email atau password salah.');
     }
-
 
     // Logout
     public function logout(Request $request)
@@ -89,6 +89,6 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('login.form')->with('success', 'Anda telah logout.');
+        return redirect()->route('login')->with('success', 'Anda telah logout.');
     }
 }
