@@ -8,7 +8,7 @@ return new class extends Migration {
     public function up(): void {
         Schema::create('kamar', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('admin_id')->state(['role'=>'admin']);
+            $table->uuid('admin_id');
             $table->string('nomor_kamar')->unique();
             $table->string('tipe_kamar'); // contoh: "Standard", "Deluxe"
             $table->decimal('harga', 12, 2);

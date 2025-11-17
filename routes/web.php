@@ -1,10 +1,12 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\DashboardUser;
+use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\KamarController;
+use App\Http\Controllers\Admin\PenyewaController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\VerificationController;
-
+use App\Http\Controllers\Penyewa\PenyewaDashboardController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,10 +19,9 @@ use App\Http\Controllers\Auth\VerificationController;
 |
 */
 
-Route::get('/', function(){
+Route::get('/', function () {
     return view('welcome');
 });
-
 
 // ---------- AUTH ----------
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -31,13 +32,36 @@ Route::post('/register', [AuthController::class, 'register'])->name('register.su
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+Route::middleware('auth')->group(function () {
 
-// ---------- EMAIL VERIFICATION ----------
-Route::get('/email/verify', [VerificationController::class, 'notice'])->middleware('auth')->name('verification.notice');
+    // Halaman "Silakan verifikasi email Anda"
+    Route::get('/email/verify', [VerificationController::class, 'notice'])
+        ->name('verification.notice');
 
-Route::get('/email/verify/{id}/{hash}', [VerificationController::class,'verify'])->middleware(['auth', 'signed'])->name('verification.verify');
+    // Link verifikasi yang dikirim ke email
+    Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])
+        ->middleware('signed')
+        ->name('verification.verify');
 
-Route::post('/email/verification-notification', [VerificationController::class ,'send'])->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+    // Kirim ulang email verifikasi
+    Route::post('/email/verification-notification', [VerificationController::class, 'send'])
+        ->middleware('throttle:6,1')
+        ->name('verification.send');
+});
 
+// ---------- DASHBOARD PENYEWA -----------
+Route::middleware(['auth', 'verified', 'role:penyewa'])->prefix('penyewa')->group(function () {
 
-Route::get('/dashboard', [DashboardUser::class , 'index'])->middleware(['auth', 'verified'])->name('dashboard');
+    Route::get('/dashboard', [PenyewaDashboardController::class, 'index'])->name('penyewa.dashboard');
+
+});
+
+// ---------- DASHBOARD ADMIN -----------
+Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+
+        Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+
+        Route::resource('kamar', KamarController::class);
+
+        Route::resource('penyewa', PenyewaController::class);
+    });
