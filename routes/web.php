@@ -1,12 +1,9 @@
 <?php
 
-use App\Http\Controllers\Auth\VerificationController;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\DashboardController;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
-use Illuminate\Http\Request;
+use App\Http\Controllers\DashboardUser;
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\VerificationController;
 
 
 /*
@@ -42,7 +39,5 @@ Route::get('/email/verify/{id}/{hash}', [VerificationController::class,'verify']
 
 Route::post('/email/verification-notification', [VerificationController::class ,'send'])->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
-// ---------- DASHBOARD (Contoh) ----------
-Route::get('/dashboard', function () {
-    return view('user.dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::get('/dashboard', [DashboardUser::class , 'index'])->middleware(['auth', 'verified'])->name('dashboard');

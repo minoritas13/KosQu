@@ -1,12 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
+use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
-use App\Models\User;
+
 
 class AuthController extends Controller
 {
@@ -70,8 +72,7 @@ class AuthController extends Controller
             $user = Auth::user();
 
             // Cek apakah email sudah diverifikasi
-            if (!$user->hasVerifiedEmail()) {
-                Auth::logout();
+            if (is_null($user->email_verified_at)) {
                 return redirect()->route('verification.notice')
                     ->with('warning', 'Silakan verifikasi email terlebih dahulu sebelum login.');
             }

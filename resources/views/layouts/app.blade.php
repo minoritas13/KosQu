@@ -8,10 +8,15 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="flex flex-col min-h-screen bg-gray-100 font-sans">
+<body class="flex flex-col min-h-screen font-sans bg-gray-100">
 
     {{-- Header --}}
-    @include('components.guest-header')
+    @if (Auth::check())
+        @include('components.user-header')
+    @else
+        @include('components.guest-header')
+    @endif
+
 
     {{-- Konten Utama --}}
     <main class="flex-grow">
@@ -22,4 +27,5 @@
     @include('components.footer')
 
 </body>
+
 </html>
