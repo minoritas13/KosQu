@@ -12,7 +12,7 @@ return new class extends Migration {
             $table->date('tggl_bayar');
             $table->decimal('jumlah_bayar', 12, 2);
             $table->enum('metode_bayar', ['transfer', 'cash', 'e-wallet']);
-            $table->enum('status', ['pending', 'selesai'])->default('belum_lunas');
+            $table->enum('status', ['pending', 'selesai'])->default('pending');
             $table->timestamps();
 
             // Foreign key

@@ -5,6 +5,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\KamarController;
+use App\Http\Controllers\Admin\PenyewaController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 
@@ -42,7 +45,23 @@ Route::get('/email/verify/{id}/{hash}', [VerificationController::class,'verify']
 
 Route::post('/email/verification-notification', [VerificationController::class ,'send'])->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
-// ---------- DASHBOARD (Contoh) ----------
-Route::get('/dashboard', function () {
-    return view('user.dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// ---------- DASHBOARD PENYEWA -----------
+Route::middleware(['auth', 'verified', 'role:penyewa'])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('penyewa.dashboard');
+    })->name('penyewa.dashboard');
+});
+
+// ---------- DASHBOARD ADMIN -----------
+Route::middleware(['auth', 'verified', 'role:admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+
+        Route::get('/dashboard', [AdminDashboardController::class, 'index'])
+            ->name('dashboard');
+
+        Route::resource('kamar', KamarController::class);
+
+        Route::resource('penyewa', PenyewaController::class);
+    });

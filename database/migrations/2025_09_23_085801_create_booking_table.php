@@ -11,8 +11,8 @@ return new class extends Migration {
             $table->uuid('user_id');
             $table->uuid('kamar_id');
             $table->date('tgl_booking')->default(now());
-            $table->date('tggl_mulai');
-            $table->date('tggl_selesai');
+            $table->date('tgl_mulai');
+            $table->date('tgl_selesai');
             $table->enum('status', ['pending', 'disetujui', 'dibatalkan'])->default('pending');
             $table->timestamps();
 

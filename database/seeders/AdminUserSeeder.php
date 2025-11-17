@@ -23,5 +23,17 @@ class AdminUserSeeder extends Seeder
                 'email_verified_at' => now(), // langsung dianggap sudah verifikasi
             ]);
         }
+
+        if (!User::where('email', 'penyewa@example.com')->exists()) {
+            User::create([
+                'id' => Str::uuid(),
+                'name' => 'Penyewa',
+                'email' => 'penyewa@example.com',
+                'no_hp' => '081368087522',
+                'password' => Hash::make('password123'), // ganti sesuai keinginan
+                'role' => 'penyewa', // pastikan field ini ada di tabel users
+                'email_verified_at' => now(), // langsung dianggap sudah verifikasi
+            ]);
+        }
     }
 }

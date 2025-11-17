@@ -69,14 +69,20 @@ class AuthController extends Controller
 
             $user = Auth::user();
 
-            // Cek apakah email sudah diverifikasi
+            // Cek verifikasi email
             if (!$user->hasVerifiedEmail()) {
                 Auth::logout();
                 return redirect()->route('verification.notice')
                     ->with('warning', 'Silakan verifikasi email terlebih dahulu sebelum login.');
             }
+            
+            if ($user->role === 'admin') {
+                return redirect()->route('admin.dashboard')
+                    ->with('success', 'Selamat datang kembali, Admin!');
+            }
 
-            return redirect()->route('dashboard')->with('success', 'Selamat datang kembali, ' . $user->name . '!');
+            return redirect()->route('penyewa.dashboard')
+                ->with('success', 'Selamat datang kembali, ' . $user->name . '!');
         }
 
         return back()->with('error', 'Email atau password salah.');
