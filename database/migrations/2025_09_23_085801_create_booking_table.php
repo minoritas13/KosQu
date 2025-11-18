@@ -5,22 +5,24 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
-    public function up(): void
-    {
+    public function up(): void {
         Schema::create('booking', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('kamar_id')->constrained('kamar')->onDelete('cascade');
-            $table->date('tgl_booking');
-            $table->date('tgl_mulai');
-            $table->date('tgl_selesai');
-            $table->string('status')->default('pending'); // pending, confirmed, canceled
-            $table->timestamp('created_at')->useCurrent();
+            $table->uuid('id')->primary();
+            $table->uuid('user_id');
+            $table->uuid('kamar_id');
+            $table->date('tgl_booking')->default(now());
+            $table->date('tggl_mulai');
+            $table->date('tggl_selesai');
+            $table->enum('status', ['pending', 'disetujui', 'dibatalkan'])->default('pending');
+            $table->timestamps();
+
+            // Foreign key
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('kamar_id')->references('id')->on('kamar')->onDelete('cascade');
         });
     }
 
-    public function down(): void
-    {
+    public function down(): void {
         Schema::dropIfExists('booking');
     }
 };

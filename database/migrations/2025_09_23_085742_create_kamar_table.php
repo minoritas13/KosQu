@@ -5,22 +5,24 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
-    public function up(): void
-    {
+    public function up(): void {
         Schema::create('kamar', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('admin_id')->constrained('users')->onDelete('cascade');
+            $table->uuid('id')->primary();
+            $table->uuid('admin_id')->state(['role'=>'admin']);
             $table->string('nomor_kamar')->unique();
-            $table->string('tipe_kamar');
+            $table->string('tipe_kamar'); // contoh: "Standard", "Deluxe"
             $table->decimal('harga', 12, 2);
-            $table->string('status')->default('tersedia'); // tersedia, dipesan, terisi
+            $table->enum('status', ['tersedia', 'terisi', 'perbaikan'])->default('tersedia');
             $table->text('deskripsi')->nullable();
-            $table->timestamp('created_at')->useCurrent();
+            $table->string('foto')->nullable(); 
+            $table->timestamps();
+
+            // Foreign key
+            $table->foreign('admin_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
-    public function down(): void
-    {
+    public function down(): void {
         Schema::dropIfExists('kamar');
     }
 };

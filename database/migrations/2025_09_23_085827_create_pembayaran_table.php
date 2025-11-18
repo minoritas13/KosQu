@@ -5,21 +5,22 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
-    public function up(): void
-    {
+    public function up(): void {
         Schema::create('pembayaran', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('booking_id')->constrained('booking')->onDelete('cascade');
-            $table->date('tgl_bayar');
+            $table->uuid('id')->primary();
+            $table->uuid('booking_id');
+            $table->date('tggl_bayar');
             $table->decimal('jumlah_bayar', 12, 2);
-            $table->string('metode_bayar');
-            $table->string('status_bayar')->default('pending'); // pending, lunas, gagal
-            $table->timestamp('created_at')->useCurrent();
+            $table->enum('metode_bayar', ['transfer', 'cash', 'e-wallet']);
+            $table->enum('status', ['pending', 'selesai'])->default('belum_lunas');
+            $table->timestamps();
+
+            // Foreign key
+            $table->foreign('booking_id')->references('id')->on('booking')->onDelete('cascade');
         });
     }
 
-    public function down(): void
-    {
+    public function down(): void {
         Schema::dropIfExists('pembayaran');
     }
 };
