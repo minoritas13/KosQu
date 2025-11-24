@@ -8,8 +8,12 @@ class DashboardUser extends Controller
 {
     public function index()
     {
-        $kamar = Kamar::with('admin')->get();
+        $kamar = Kamar::where('status', 'tersedia')
+                ->orderBy('harga', 'asc')
+                ->take(3)
+                ->get();
 
-        return view('user.dashboard', compact('kamar'));
+        return view('user.home', compact('kamar'));
     }
+
 }

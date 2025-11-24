@@ -8,15 +8,34 @@
     <h1 class="mb-2 text-3xl font-bold">Temukan Kamar Impian Anda</h1>
     <p class="mb-6 text-gray-600">Jelajahi kamar yang tersedia dan pilih yang paling cocok untuk Anda</p>
 
-    {{-- Search Bar --}}
-    <div class="flex flex-col gap-3 mb-10 md:flex-row">
-        <input type="text" placeholder="Cari berdasarkan nomor kamar atau kata kunci"
-               class="w-full p-3 border border-gray-300 rounded-xl"/>
+    {{-- Search & Filter --}}
+<div class="flex flex-col gap-4 mb-10 md:flex-row md:items-center">
 
-        <button class="px-4 py-2 bg-white border shadow-sm rounded-xl">Harga ▼</button>
-        <button class="px-4 py-2 bg-white border shadow-sm rounded-xl">Fasilitas ▼</button>
-        <button class="px-4 py-2 bg-white border shadow-sm rounded-xl">Urutkan ↕</button>
-    </div>
+    <input type="text"
+        placeholder="Cari nomor kamar atau kata kunci..."
+        class="w-full md:flex-1 p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-400 outline-none">
+
+    <select class="px-4 py-3 border border-gray-300 rounded-xl bg-white focus:ring-2 focus:ring-purple-400 outline-none">
+        <option>Harga</option>
+        <option value="asc">Termurah</option>
+        <option value="desc">Termahal</option>
+    </select>
+
+    <select class="px-4 py-3 border border-gray-300 rounded-xl bg-white focus:ring-2 focus:ring-purple-400 outline-none">
+        <option>Fasilitas</option>
+        <option>AC</option>
+        <option>Kamar Mandi Dalam</option>
+        <option>Wifi</option>
+    </select>
+
+    <select class="px-4 py-3 border border-gray-300 rounded-xl bg-white focus:ring-2 focus:ring-purple-400 outline-none">
+        <option>Urutkan</option>
+        <option>Terbaru</option>
+        <option>Terlama</option>
+    </select>
+
+</div>
+
 
     {{-- Grid Kamar --}}
     <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -67,7 +86,7 @@
                         </a>
 
                         <a href="#"
-                           class="w-1/2 px-4 py-2 text-center text-white bg-gray-900 rounded-lg">
+                           class="w-1/2 px-4 py-2 text-center text-white bg-blue-600 rounded-lg">
                             Pesan Sekarang
                         </a>
 

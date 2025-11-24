@@ -4,25 +4,22 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardUser;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\VerificationController;
-
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\KamarController;
+use App\Http\Controllers\PembayaranController;
+use App\Http\Controllers\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
-| Web Routes
+| WEB ROUTES
 |--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
 */
 
-Route::get('/', function(){
-    return view('welcome');
-});
+// ================= HOME (LANDING PAGE) =================
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 
-// ---------- AUTH ----------
+// ================= AUTH =================
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
 
@@ -32,12 +29,38 @@ Route::post('/register', [AuthController::class, 'register'])->name('register.su
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 
-// ---------- EMAIL VERIFICATION ----------
-Route::get('/email/verify', [VerificationController::class, 'notice'])->middleware('auth')->name('verification.notice');
+// ================= EMAIL VERIFICATION =================
+Route::get('/email/verify', [VerificationController::class, 'notice'])
+    ->middleware('auth')
+    ->name('verification.notice');
 
-Route::get('/email/verify/{id}/{hash}', [VerificationController::class,'verify'])->middleware(['auth', 'signed'])->name('verification.verify');
+Route::get('/email/verify/{id}/{hash}', [VerificationController::class,'verify'])
+    ->middleware(['auth', 'signed'])
+    ->name('verification.verify');
 
-Route::post('/email/verification-notification', [VerificationController::class ,'send'])->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+Route::post('/email/verification-notification', [VerificationController::class ,'send'])
+    ->middleware(['auth', 'throttle:6,1'])
+    ->name('verification.send');
 
 
-Route::get('/dashboard', [DashboardUser::class , 'index'])->middleware(['auth', 'verified'])->name('dashboard');
+// ================= USER AREA =================
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
+
+    Route::get('/', [HomeController::class, 'index'])->name('home');
+
+    Route::get('/pencarian', [HomeController::class, 'pencarian'])->name('pencarian');
+
+    // PEMESANAN KAMAR
+    Route::get('/kamar/{id}/pesan', [KamarController::class, 'pesan'])->name('kamar.pesan');
+    Route::post('/kamar/pesan', [KamarController::class, 'storePesanan'])->name('kamar.store');
+
+    // RIWAYAT PEMBAYARAN
+    Route::get('/riwayat-pembayaran', [PembayaranController::class, 'index'])
+        ->name('pembayaran.riwayat');
+
+    // PROFILE USER
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+
+});
