@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\KamarController;
+use App\Http\Controllers\Penyewa\KamarPenyewaController;
 use App\Http\Controllers\Admin\PenyewaController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\VerificationController;
@@ -21,7 +22,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('welcome');
 
 // ---------- AUTH ----------
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -53,6 +54,9 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'verified', 'role:penyewa'])->prefix('penyewa')->group(function () {
 
     Route::get('/dashboard', [PenyewaDashboardController::class, 'index'])->name('penyewa.dashboard');
+
+    Route::post('kamar/{id}/pesan', [KamarPenyewaController::class, 'store'])->name('kamar.pesan');
+    Route::get('kamar/{id}/pesan' ,[KamarPenyewaController::class, 'index'] )->name('penyewa.pesan');
 
 });
 

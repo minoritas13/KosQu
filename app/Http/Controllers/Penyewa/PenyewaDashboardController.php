@@ -10,7 +10,7 @@ class PenyewaDashboardController extends Controller
 {
     public function index()
     {
-        $kamar = Kamar::with('admin')->get();
+        $kamar = Kamar::where('status','tersedia')->get();
 
         return view('penyewa.dashboard', compact('kamar'));
     }

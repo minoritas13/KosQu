@@ -14,6 +14,7 @@
                 <th class="px-4 py-3 border-b">Nama</th>
                 <th class="px-4 py-3 border-b">Email</th>
                 <th class="px-4 py-3 border-b">No HP</th>
+                <th class="px-4 py-3 border-b">Email Verified</th>
                 <th class="px-4 py-3 border-b">Aksi</th>
             </tr>
         </thead>
@@ -24,6 +25,7 @@
                     <td class="px-4 py-3 border-b">{{ $item->name }}</td>
                     <td class="px-4 py-3 border-b">{{ $item->email }}</td>
                     <td class="px-4 py-3 border-b">{{ $item->no_hp }}</td>
+                    <td class="px-4 py-3 border-b">{{ $item->email_verified_at }}</td>
                     <td class="flex gap-2 px-4 py-3 border-b">
 
                         <a href="{{ route('admin.penyewa.edit', $item->id) }}" class="text-green-600">Edit</a>
