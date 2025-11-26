@@ -4,7 +4,7 @@
 
 {{-- Hero Section --}}
 <section class="relative h-[80vh] bg-cover bg-center flex items-center"
-    style="background-image: url('{{ asset('images/bg-login.jpg') }}');">
+    style='background-image: url("{{ asset("images/bg-login.jpg") }}");'>
     <div class="max-w-lg px-8 py-20 mx-8 text-center shadow-lg bg-white/80 rounded-xl">
         <h1 class="mb-4 text-4xl font-bold text-gray-800">Temukan Kost Impianmu</h1>
         <p class="mb-6 text-gray-700">Pilih kost sesuai kebutuhan dan kenyamananmu hanya di KostQu.</p>
@@ -14,6 +14,7 @@
         </a>
     </div>
 </section>
+
 
 {{-- Kamar Populer --}}
 <section class="px-6 py-16 bg-white">

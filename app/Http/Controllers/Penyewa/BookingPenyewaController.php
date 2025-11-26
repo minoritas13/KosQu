@@ -7,7 +7,7 @@ use App\Models\Booking;
 use App\Models\kamar;
 use Illuminate\Http\Request;
 
-class KamarPenyewaController extends Controller
+class BookingPenyewaController extends Controller
 {
     public function index($id)
     {
@@ -30,7 +30,7 @@ class KamarPenyewaController extends Controller
         $kamar = Kamar::findOrFail($id);
 
         // Simpan data booking
-        Booking::create([
+        $booking = Booking::create([
             'kamar_id' => $kamar->id,
             'user_id' => auth()->id(),
             'tgl_mulai' => $request->tgl_mulai,
@@ -44,7 +44,7 @@ class KamarPenyewaController extends Controller
             'status' => 'terisi',
         ]);
 
-        return redirect()->route('penyewa.dashboard')
-            ->with('success', 'Pemesanan berhasil!');
+        return redirect()->route('penyewa.pembayaran', $booking->id)
+            ->with('success', 'silahkan konfirmasi pembayaran');
     }
 }

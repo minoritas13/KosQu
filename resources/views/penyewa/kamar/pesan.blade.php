@@ -72,9 +72,10 @@
     <div class="p-6 space-y-4 bg-white shadow-md rounded-xl">
         <h3 class="text-lg font-semibold text-gray-800">{{ $kamar->tipe_kamar }}</h3>
 
-        @if ($kamar->foto)
-            <img src="{{ asset('storage/' . $kamar->foto) }}" class="rounded-lg">
-        @endif
+        <img
+            src="{{ Storage::url($kamar->foto) }}"
+            alt="Foto {{ $kamar->tipe_kamar }}"
+            class="w-full h-64 object-cover rounded-xl shadow-md">
 
         <div class="pb-2 border-b">
             <p class="font-medium">{{ $kamar->nomor_kamar }}</p>

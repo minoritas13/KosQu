@@ -1,13 +1,15 @@
 <?php
 
-use App\Http\Controllers\Admin\AdminDashboardController;
-use App\Http\Controllers\Admin\KamarController;
-use App\Http\Controllers\Penyewa\KamarPenyewaController;
-use App\Http\Controllers\Admin\PenyewaController;
-use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\Auth\VerificationController;
-use App\Http\Controllers\Penyewa\PenyewaDashboardController;
+use App\Models\Booking;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Admin\KamarController;
+use App\Http\Controllers\Admin\PenyewaController;
+use App\Http\Controllers\Auth\VerificationController;
+use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Pembayaran\PembayaranController;
+use App\Http\Controllers\Penyewa\BookingPenyewaController;
+use App\Http\Controllers\Penyewa\PenyewaDashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -55,8 +57,11 @@ Route::middleware(['auth', 'verified', 'role:penyewa'])->prefix('penyewa')->grou
 
     Route::get('/dashboard', [PenyewaDashboardController::class, 'index'])->name('penyewa.dashboard');
 
-    Route::post('kamar/{id}/pesan', [KamarPenyewaController::class, 'store'])->name('kamar.pesan');
-    Route::get('kamar/{id}/pesan' ,[KamarPenyewaController::class, 'index'] )->name('penyewa.pesan');
+    Route::get('kamar/{id}/pesan' ,[BookingPenyewaController::class, 'index'] )->name('penyewa.pesan');
+    Route::post('kamar/{id}/pesan', [BookingPenyewaController::class, 'store'])->name('kamar.pesan');
+
+    Route::get('booking/{id}/pembayaran',[PembayaranController::class, 'index'])->name('penyewa.pembayaran');
+    Route::post('booking/{id}/pembayaran',[PembayaranController::class, 'store'])->name('penyewa.pembayaran.store');
 
 });
 
