@@ -5,7 +5,7 @@
         <a href="{{ route('pencarian') }}" class="hover:text-[#6a5acd] transition">
         Pencarian
         </a>
-        <a href="#" class="hover:text-blue-600">Pembayaran</a>
+        <a href="{{ route('penyewa.pembayaran') }}" class="hover:text-[#6a5acd] transition">Pembayaran</a>
     </div>
     <div class="flex items-center space-x-4">
         <button> <x-zondicon-notifications class="w-6 h-6" /> </button>
