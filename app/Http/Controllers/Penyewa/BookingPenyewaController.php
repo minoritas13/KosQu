@@ -18,33 +18,29 @@ class BookingPenyewaController extends Controller
 
     public function store(Request $request, $id)
     {
-        // Validasi input
+        // Validasi input booking
         $request->validate([
-            'nama' => 'required|string',
-            'tgl_mulai' => 'required|date',
-            'tgl_selesai' => 'required|date',
+            'tgl_mulai'   => 'required|date|after_or_equal:today',
+            'tgl_selesai' => 'required|date|after:tgl_mulai',
             'tgl_booking' => 'required|date',
         ]);
 
-        // Ambil kamar berdasarkan id
+        // Ambil kamar berdasarkan ID
         $kamar = Kamar::findOrFail($id);
 
-        // Simpan data booking
+        // Buat booking baru
         $booking = Booking::create([
-            'kamar_id' => $kamar->id,
-            'user_id' => auth()->id(),
-            'tgl_mulai' => $request->tgl_mulai,
+            'kamar_id'    => $kamar->id,
+            'user_id'     => auth()->id(),
+            'tgl_mulai'   => $request->tgl_mulai,
             'tgl_selesai' => $request->tgl_selesai,
             'tgl_booking' => $request->tgl_booking,
-            'status' => 'pending',
+            'status'      => 'pending', // Menunggu pembayaran
         ]);
 
-        // ubah status kamar menjadi terisi
-        $kamar->update([
-            'status' => 'terisi',
-        ]);
-
-        return redirect()->route('penyewa.pembayaran', $booking->id)
-            ->with('success', 'silahkan konfirmasi pembayaran');
+        // Redirect ke halaman pembayaran berdasarkan ID booking
+        return redirect()
+            ->route('penyewa.pembayaran', ['id' => $booking->id])
+            ->with('success', 'Silakan lakukan pembayaran untuk menyelesaikan booking.');
     }
 }
