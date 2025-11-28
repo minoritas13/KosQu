@@ -63,6 +63,9 @@ Route::middleware(['auth', 'verified', 'role:penyewa'])->prefix('penyewa')->grou
     Route::get('booking/{id}/pembayaran',[PembayaranController::class, 'index'])->name('penyewa.pembayaran');
     Route::post('booking/{id}/pembayaran',[PembayaranController::class, 'store'])->name('penyewa.pembayaran.store');
 
+    Route::get('pembayaran/{id}/sukses', [PembayaranController::class, 'success'])
+    ->name('penyewa.pembayaran.success');
+
 });
 
 // ---------- DASHBOARD ADMIN -----------
