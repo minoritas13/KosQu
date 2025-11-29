@@ -45,10 +45,10 @@ Route::post('/email/verification-notification', [VerificationController::class ,
 
 // ================= USER AREA =================
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
 
-    Route::get('/', [HomeController::class, 'index'])->name('home');
+    Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
 
+    // PENCAIRAN KAMAR (Search + Filter)
     Route::get('/pencarian', [HomeController::class, 'pencarian'])->name('pencarian');
 
     // PEMESANAN KAMAR
@@ -62,5 +62,4 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // PROFILE USER
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
     Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
-
 });
