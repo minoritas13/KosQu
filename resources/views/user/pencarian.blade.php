@@ -4,7 +4,6 @@
 
 <div class="container px-4 py-10 mx-auto">
 
-    {{-- Judul --}}
     <h1 class="mb-2 text-3xl font-bold">Pencarian Kamar</h1>
     <p class="mb-6 text-gray-600">Gunakan filter berikut untuk menemukan kamar sesuai kebutuhan Anda.</p>
 
@@ -12,14 +11,14 @@
     <form method="GET" action="{{ route('pencarian') }}">
         <div class="flex flex-col gap-4 mb-10 md:flex-row md:items-center">
 
-            {{-- Search --}}
+            {{-- KEYWORD SEARCH --}}
             <input type="text"
-                name="search"
-                value="{{ request('search') }}"
+                name="keyword"
+                value="{{ request('keyword') }}"
                 placeholder="Cari nomor kamar / kata kunci..."
                 class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-400 outline-none">
 
-            {{-- Harga --}}
+            {{-- FILTER HARGA --}}
             <select name="harga"
                 class="px-4 py-3 border border-gray-300 rounded-xl bg-white focus:ring-2 focus:ring-purple-400 outline-none">
                 <option value="">Harga</option>
@@ -27,7 +26,7 @@
                 <option value="desc" {{ request('harga')=='desc' ? 'selected':'' }}>Termahal</option>
             </select>
 
-            {{-- Fasilitas --}}
+            {{-- FILTER FASILITAS --}}
             <select name="fasilitas"
                 class="px-4 py-3 border border-gray-300 rounded-xl bg-white focus:ring-2 focus:ring-purple-400 outline-none">
                 <option value="">Fasilitas</option>
@@ -36,35 +35,33 @@
                 <option value="Wifi" {{ request('fasilitas')=='Wifi' ? 'selected':'' }}>Wifi</option>
             </select>
 
-            {{-- Urutkan --}}
+            {{-- URUTKAN --}}
             <select name="urutkan"
                 class="px-4 py-3 border border-gray-300 rounded-xl bg-white focus:ring-2 focus:ring-purple-400 outline-none">
                 <option value="">Urutkan</option>
-                <option value="new" {{ request('urutkan')=='new' ? 'selected':'' }}>Terbaru</option>
-                <option value="old" {{ request('urutkan')=='old' ? 'selected':'' }}>Terlama</option>
+                <option value="newest" {{ request('urutkan')=='newest' ? 'selected':'' }}>Terbaru</option>
+                <option value="oldest" {{ request('urutkan')=='oldest' ? 'selected':'' }}>Terlama</option>
             </select>
 
-            {{-- Tombol --}}
             <button class="px-6 py-3 text-white bg-purple-600 rounded-xl">
                 Filter
             </button>
         </div>
     </form>
 
-    {{-- Jika tidak ada hasil --}}
+    {{-- JIKA DATA KOSONG --}}
     @if($kamar->count() == 0)
         <div class="p-6 text-center bg-red-50 rounded-xl">
             <p class="text-red-600 font-semibold">Tidak ada kamar ditemukan dengan filter tersebut.</p>
         </div>
     @endif
 
-    {{-- Grid Hasil --}}
+    {{-- GRID LIST KAMAR --}}
     <div class="grid grid-cols-1 gap-8 mt-8 md:grid-cols-2 lg:grid-cols-3">
 
         @foreach($kamar as $item)
             <div class="overflow-hidden bg-white border shadow rounded-xl">
 
-                {{-- Gambar --}}
                 <div class="relative">
                     <img
                         src="{{ $item->foto ? asset('storage/' . $item->foto) : 'https://via.placeholder.com/600x400?text=Picture' }}"
@@ -77,7 +74,6 @@
                     </span>
                 </div>
 
-                {{-- Konten --}}
                 <div class="p-4">
                     <h3 class="text-lg font-semibold">{{ $item->nomor_kamar }}</h3>
 
