@@ -9,6 +9,7 @@ use App\Http\Controllers\KamarController;
 use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\ProfileController;
 
+
 /*
 |--------------------------------------------------------------------------
 | WEB ROUTES
@@ -55,9 +56,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/kamar/{id}/pesan', [KamarController::class, 'pesan'])->name('kamar.pesan');
     Route::post('/kamar/pesan', [KamarController::class, 'storePesanan'])->name('kamar.store');
 
-    // RIWAYAT PEMBAYARAN
-    Route::get('/riwayat-pembayaran', [PembayaranController::class, 'index'])
-        ->name('pembayaran.riwayat');
+    // HALAMAN PEMBAYARAN PENYEWA
+    Route::get('/pembayaran', [PembayaranController::class, 'index'])
+        ->name('penyewa.pembayaran')
+        ->middleware('auth'); // Wajib login
+
 
     // PROFILE USER
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');

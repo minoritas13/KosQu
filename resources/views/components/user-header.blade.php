@@ -3,8 +3,12 @@
 
     <div class="space-x-6 font-medium text-gray-700">
         <a href="{{ route('home') }}" class="hover:text-blue-600">Beranda</a>
-        <a href="{{ route('pencarian') }}" class="hover:text-[#6a5acd] transition">Pencarian</a>
-        <a href="#" class="hover:text-blue-600">Pembayaran</a>
+
+        <a href="{{ route('pencarian') }}" class="hover:text-[#6a5acd] transition">
+        Pencarian
+        </a>
+        <a href="{{ route('penyewa.pembayaran') }}" class="hover:text-[#6a5acd] transition">Pembayaran</a>
+
     </div>
 
     <div class="flex items-center space-x-4">
