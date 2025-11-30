@@ -46,7 +46,7 @@ Route::post('/email/verification-notification', [VerificationController::class ,
 // ================= USER AREA =================
 Route::middleware(['auth', 'verified'])->group(function () {
 
-    Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
+    Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
 
     // PENCAIRAN KAMAR (Search + Filter)
     Route::get('/pencarian', [HomeController::class, 'pencarian'])->name('pencarian');

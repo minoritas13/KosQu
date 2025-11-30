@@ -12,15 +12,27 @@
     {{-- HEADER --}}
     @include('components.user-header')
 
-    {{-- HERO SECTION --}}
-    <section class="relative h-[80vh] bg-cover bg-center flex items-center mt -1"
-        style="background-image: url('{{ asset('images/bg-login.jpg') }}');">
-        <div class="bg-white/80 rounded-xl px-8 py-16 mx-8 shadow-lg max-w-lg">
-            <h1 class="text-4xl font-bold mb-4">Temukan Kost Impianmu</h1>
-            <p class="mb-6 text-gray-700">Pilih kamar sesuai kebutuhan dan kenyamananmu dengan sistem pemesanan modern.</p>
-            <a href="#kamar" class="bg-blue-600 text-white px-8 py-3 rounded-full shadow hover:bg-[#5a4cc2] transition"> Cari Kamar Sekarang </a>
-        </div>
-    </section>
+    <!-- HERO SECTION TANPA CARD -->
+<section class="relative h-[80vh] bg-cover bg-center flex items-center justify-center"
+         style="background-image: url('{{ asset('images/bg-login.jpg') }}');">
+    
+    <!-- Overlay tipis supaya teks tetap terbaca -->
+    <div class="absolute inset-0 bg-black/25"></div>
+
+    <!-- Konten teks dan button -->
+    <div class="relative text-center px-6">
+        <h1 class="text-5xl md:text-6xl font-extrabold text-white drop-shadow-lg mb-4">
+            Temukan Kost Impianmu
+        </h1>
+        <p class="text-lg md:text-xl text-white drop-shadow-md mb-6">
+            Pilih kamar sesuai kebutuhan dan kenyamananmu dengan sistem pemesanan modern.
+        </p>
+        <a href="{{ route('pencarian') }}"
+           class="inline-block bg-blue-600 text-white px-8 py-3 rounded-full text-lg font-semibold shadow-lg hover:bg-[#5a4cc2] transition">
+            Cari Kamar Sekarang
+        </a>
+    </div>
+</section>
 
     {{-- DAFTAR KAMAR --}}
     <section id="daftar-kamar" class="py-16 px-6 bg-white">
