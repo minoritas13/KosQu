@@ -13,7 +13,7 @@ class Pembayaran extends Model
     protected $table = 'pembayaran';
     public $incrementing = false;
     protected $keyType = 'string';
-    protected $fillable = ['booking_id', 'tggl_bayar', 'jumlah_bayar', 'metode_bayar', 'status_bayar'];
+    protected $fillable = ['booking_id', 'tggl_bayar', 'jumlah_bayar', 'metode_bayar', 'status_bayar','bukti_bayar'];
 
     protected static function boot()
     {
