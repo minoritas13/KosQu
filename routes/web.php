@@ -1,12 +1,13 @@
 <?php
 
-use App\Models\Booking;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\AdminPembayaranController;
 use App\Http\Controllers\Admin\KamarController;
 use App\Http\Controllers\Admin\PenyewaController;
 use App\Http\Controllers\Auth\VerificationController;
-use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Pembayaran\PembayaranController;
 use App\Http\Controllers\Penyewa\BookingPenyewaController;
 use App\Http\Controllers\Penyewa\PenyewaDashboardController;
@@ -71,9 +72,15 @@ Route::middleware(['auth', 'verified', 'role:penyewa'])->prefix('penyewa')->grou
 // ---------- DASHBOARD ADMIN -----------
 Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
 
-        Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
-        Route::resource('kamar', KamarController::class);
+    Route::get('/pembayaran', [AdminPembayaranController::class, 'index'])->name('pembayaran');
+    Route::put('/pembayaran/konfirmasi/{id}', [AdminPembayaranController::class, 'konfirmasi'])
+        ->name('pembayaran.konfirmasi');
 
-        Route::resource('penyewa', PenyewaController::class);
-    });
+
+
+    Route::resource('kamar', KamarController::class);
+
+    Route::resource('penyewa', PenyewaController::class);
+});

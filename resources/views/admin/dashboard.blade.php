@@ -16,11 +16,21 @@
                 <h2 class="text-xl font-semibold">Kelola Penyewa</h2>
             </a>
 
-            <a class="p-5 bg-white rounded shadow">
+            <a href="{{ route('admin.pembayaran') }}" class="p-5 bg-white shadow rounded">
+                <h2 class="text-xl font-semibold">Kelola Pembayaran</h2>
+            </a>
+
+
+            <a class="p-5 bg-white shadow rounded">
                 <h2 class="text-xl font-semibold">Laporan</h2>
             </a>
         </div>
     </div>
 
 </body>
+<<<<<<< HEAD
 @endsection
+=======
+
+</html>
+>>>>>>> sulthon_dev
