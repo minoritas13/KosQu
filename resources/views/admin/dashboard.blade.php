@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body class="bg-gray-100">
 
     <div class="p-5">
@@ -18,6 +20,11 @@
                 <h2 class="text-xl font-semibold">Kelola Penyewa</h2>
             </a>
 
+            <a href="{{ route('admin.pembayaran') }}" class="p-5 bg-white shadow rounded">
+                <h2 class="text-xl font-semibold">Kelola Pembayaran</h2>
+            </a>
+
+
             <a class="p-5 bg-white shadow rounded">
                 <h2 class="text-xl font-semibold">Laporan</h2>
             </a>
@@ -25,4 +32,5 @@
     </div>
 
 </body>
+
 </html>

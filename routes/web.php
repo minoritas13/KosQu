@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\AdminPembayaranController;
 use App\Http\Controllers\Admin\KamarController;
 use App\Http\Controllers\Admin\PenyewaController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
@@ -23,7 +24,7 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::get('/', function(){
+Route::get('/', function () {
     return view('welcome');
 });
 
@@ -41,9 +42,9 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // ---------- EMAIL VERIFICATION ----------
 Route::get('/email/verify', [VerificationController::class, 'notice'])->middleware('auth')->name('verification.notice');
 
-Route::get('/email/verify/{id}/{hash}', [VerificationController::class,'verify'])->middleware(['auth', 'signed'])->name('verification.verify');
+Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->middleware(['auth', 'signed'])->name('verification.verify');
 
-Route::post('/email/verification-notification', [VerificationController::class ,'send'])->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+Route::post('/email/verification-notification', [VerificationController::class, 'send'])->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
 // ---------- DASHBOARD PENYEWA -----------
 Route::middleware(['auth', 'verified', 'role:penyewa'])->group(function () {
@@ -53,15 +54,18 @@ Route::middleware(['auth', 'verified', 'role:penyewa'])->group(function () {
 });
 
 // ---------- DASHBOARD ADMIN -----------
-Route::middleware(['auth', 'verified', 'role:admin'])
-    ->prefix('admin')
-    ->name('admin.')
-    ->group(function () {
+Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
 
-        Route::get('/dashboard', [AdminDashboardController::class, 'index'])
-            ->name('dashboard');
+    Route::get('/dashboard', [AdminDashboardController::class, 'index'])
+        ->name('dashboard');
 
-        Route::resource('kamar', KamarController::class);
+    Route::get('/pembayaran', [AdminPembayaranController::class, 'index'])->name('pembayaran');
+    Route::put('/pembayaran/konfirmasi/{id}', [AdminPembayaranController::class, 'konfirmasi'])
+        ->name('pembayaran.konfirmasi');
 
-        Route::resource('penyewa', PenyewaController::class);
-    });
+
+
+    Route::resource('kamar', KamarController::class);
+
+    Route::resource('penyewa', PenyewaController::class);
+});

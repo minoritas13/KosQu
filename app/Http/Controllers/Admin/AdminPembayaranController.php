@@ -2,31 +2,47 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Models\Kamar;
+use App\Models\Booking;
 use App\Models\Pembayaran;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class AdminPembayaranController extends Controller
 {
     public function index()
     {
-        // Ambil data pembayaran beserta data booking
         $pembayaran = Pembayaran::with('booking')->orderBy('created_at', 'desc')->get();
         return view('admin.pembayaran.index', compact('pembayaran'));
     }
 
     public function konfirmasi($id)
     {
+        // cari data pembayaran
         $pembayaran = Pembayaran::findOrFail($id);
-        
-        // Update status pembayaran
+
+        // update status pembayaran
         $pembayaran->update([
             'status' => 'selesai'
         ]);
 
-        // Opsional: Update status booking juga jika perlu
-        // $pembayaran->booking->update(['status' => 'lunas']);
+        // ambil booking terkait pembayaran ini
+        $booking = Booking::findOrFail($pembayaran->booking_id);
 
-        return redirect()->back()->with('success', 'Pembayaran berhasil dikonfirmasi');
+        // update status booking
+        $booking->update([
+            'status' => 'disetujui'
+        ]);
+
+        // ambil kamar dari booking
+        $kamar = Kamar::findOrFail($booking->kamar_id);
+
+        // update status kamar
+        $kamar->update([
+            'status' => 'terisi'
+        ]);
+
+        return redirect()->route('admin.pembayaran')
+            ->with('success', 'Pembayaran berhasil dikonfirmasi.');
     }
 }
