@@ -56,13 +56,20 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/kamar/{id}/pesan', [KamarController::class, 'pesan'])->name('kamar.pesan');
     Route::post('/kamar/pesan', [KamarController::class, 'storePesanan'])->name('kamar.store');
 
+    // Halaman detail kamar
+    Route::get('/kamar/{id}', [KamarController::class, 'show'])->name('kamar.show');
+
     // HALAMAN PEMBAYARAN PENYEWA
     Route::get('/pembayaran', [PembayaranController::class, 'index'])
         ->name('penyewa.pembayaran')
         ->middleware('auth'); // Wajib login
 
 
-    // PROFILE USER
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+
+    // Ubah Password
+    Route::get('/profile/password', [ProfileController::class, 'password'])->name('profile.password');
+    Route::post('/profile/password/update', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
 });

@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="container px-4 py-10 mx-auto">
+<div class="container px-4 py-10 mx-auto mt-20">
 
     <h1 class="mb-2 text-3xl font-bold">Pencarian Kamar</h1>
     <p class="mb-6 text-gray-600">Gunakan filter berikut untuk menemukan kamar sesuai kebutuhan Anda.</p>
@@ -43,7 +43,7 @@
                 <option value="oldest" {{ request('urutkan')=='oldest' ? 'selected':'' }}>Terlama</option>
             </select>
 
-            <button class="px-6 py-3 text-white bg-purple-600 rounded-xl">
+            <button class="px-6 py-3 text-white bg-blue-600 rounded-xl">
                 Filter
             </button>
         </div>
@@ -86,7 +86,7 @@
                     </p>
 
                     <div class="flex justify-between gap-3 mt-4">
-                        <a href="#"
+                        <a href="{{ route('kamar.show', $item->id) }}"
                            class="w-1/2 px-4 py-2 text-center border border-gray-300 rounded-lg">
                             Lihat Detail
                         </a>

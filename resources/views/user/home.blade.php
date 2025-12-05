@@ -13,7 +13,7 @@
     @include('components.user-header')
 
     <!-- HERO SECTION TANPA CARD -->
-<section class="relative h-[80vh] bg-cover bg-center flex items-center justify-center"
+<section class="relative h-[80vh] bg-cover bg-center flex items-center justify-center mt-20"
          style="background-image: url('{{ asset('images/bg-login.jpg') }}');">
     
     <!-- Overlay tipis supaya teks tetap terbaca -->

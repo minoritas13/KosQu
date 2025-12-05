@@ -1,4 +1,5 @@
 @extends('layouts.app')
+
 @section('title', 'Daftar Akun | KostQu')
 
 @section('content')
@@ -20,8 +21,8 @@
             <div>
                 <label class="block mb-1 font-semibold text-gray-700 text-sm">Nama Lengkap</label>
                 <input type="text" name="name" placeholder="Nama lengkap anda"
-                       class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring focus:ring-blue-300"
-                       value="{{ old('name') }}">
+                        class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring focus:ring-blue-300"
+                        value="{{ old('name') }}">
                 @error('name') <p class="text-red-600 text-sm">{{ $message }}</p> @enderror
             </div>
 
@@ -29,8 +30,8 @@
             <div>
                 <label class="block mb-1 font-semibold text-gray-700">Email</label>
                 <input type="email" name="email" placeholder="user@example.com"
-                       class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring focus:ring-blue-300"
-                       value="{{ old('email') }}">
+                        class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring focus:ring-blue-300"
+                        value="{{ old('email') }}">
                 @error('email') <p class="text-red-600 text-sm">{{ $message }}</p> @enderror
             </div>
 
@@ -38,19 +39,17 @@
             <div>
                 <label class="block mb-1 font-semibold text-gray-700 text-sm">No HP</label>
                 <input type="text" name="no_hp" placeholder="08xxxxxxxxxx"
-<<<<<<< HEAD
-                       class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring focus:ring-blue-300"
-                       value="{{ old('no_hp') }}">
+                        class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring focus:ring-blue-300"
+                        value="{{ old('no_hp') }}">
                 @error('no_hp') <p class="text-red-600 text-sm">{{ $message }}</p> @enderror
             </div>
 
-            <!-- PASSWORD + SHOW/HIDE -->
             <div class="relative">
                 <label class="block mb-1 font-semibold text-gray-700">Password</label>
                 <input type="password" name="password" id="password" placeholder="Masukkan password"
-                       class="w-full border border-gray-300 rounded-lg px-3 py-2 pr-12 focus:ring focus:ring-blue-300">
+                        class="w-full border border-gray-300 rounded-lg px-3 py-2 pr-12 focus:ring focus:ring-blue-300 hide-password-toggle">
                 <button type="button" onclick="togglePassword('password', 'eye1', 'eye1-off')"
-                        class="absolute inset-y-0 right-0 flex items-center pr-3 pt-7 text-gray-500 hover:text-gray-700">
+                         class="absolute inset-y-0 right-0 flex items-center pr-3 pt-7 text-gray-500 hover:text-gray-700">
                     <svg id="eye1" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                               d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -65,13 +64,12 @@
                 @error('password') <p class="text-red-600 text-sm mt-1">{{ $message }}</p> @enderror
             </div>
 
-            <!-- KONFIRMASI PASSWORD + SHOW/HIDE -->
             <div class="relative">
                 <label class="block mb-1 font-semibold text-gray-700">Konfirmasi Password</label>
                 <input type="password" name="password_confirmation" id="password_confirmation" placeholder="Ulangi password"
-                       class="w-full border border-gray-300 rounded-lg px-3 py-2 pr-12 focus:ring focus:ring-blue-300">
+                        class="w-full border border-gray-300 rounded-lg px-3 py-2 pr-12 focus:ring focus:ring-blue-300 hide-password-toggle">
                 <button type="button" onclick="togglePassword('password_confirmation', 'eye2', 'eye2-off')"
-                        class="absolute inset-y-0 right-0 flex items-center pr-3 pt-7 text-gray-500 hover:text-gray-700">
+                         class="absolute inset-y-0 right-0 flex items-center pr-3 pt-7 text-gray-500 hover:text-gray-700">
                     <svg id="eye2" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                               d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -119,5 +117,20 @@
         }
     }
 </script>
+
+{{-- Style Khusus untuk menghilangkan ikon mata bawaan browser di input type="password" --}}
+<style>
+    .hide-password-toggle::-ms-reveal,
+    .hide-password-toggle::-ms-clear {
+        display: none;
+    }
+    .hide-password-toggle::-webkit-contacts-toggle-button,
+    .hide-password-toggle::-webkit-credentials-auto-fill-button {
+        visibility: hidden;
+        pointer-events: none;
+        position: absolute;
+        right: 0;
+    }
+</style>
 
 @endsection
