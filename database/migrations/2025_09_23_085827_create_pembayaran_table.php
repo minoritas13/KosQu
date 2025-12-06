@@ -9,7 +9,7 @@ return new class extends Migration {
         Schema::create('pembayaran', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('booking_id');
-            $table->date('tggl_bayar');
+            $table->date('tgl_bayar');
             $table->decimal('jumlah_bayar', 12, 2);
             $table->enum('metode_bayar', ['transfer', 'cash', 'e-wallet']);
             $table->enum('status', ['pending', 'selesai'])->default('pending');

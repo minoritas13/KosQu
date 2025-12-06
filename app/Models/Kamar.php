@@ -13,7 +13,7 @@ class Kamar extends Model
     protected $table = 'kamar';
     public $incrementing = false;
     protected $keyType = 'string';
-    protected $fillable = ['admin_id', 'nomor_kamar', 'tipe_kamar', 'harga', 'status', 'deskripsi'];
+    protected $fillable = ['id', 'admin_id', 'nomor_kamar', 'tipe_kamar', 'harga', 'status', 'deskripsi'];
 
     protected static function boot()
     {
@@ -33,5 +33,10 @@ class Kamar extends Model
     public function bookings()
     {
         return $this->hasMany(Booking::class, 'kamar_id');
+    }
+
+    public function getRouteKeyName()
+    {
+        return 'id';
     }
 }

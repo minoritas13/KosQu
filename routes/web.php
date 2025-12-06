@@ -63,8 +63,6 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('ad
     Route::put('/pembayaran/konfirmasi/{id}', [AdminPembayaranController::class, 'konfirmasi'])
         ->name('pembayaran.konfirmasi');
 
-
-
     Route::resource('kamar', KamarController::class);
 
     Route::resource('penyewa', PenyewaController::class);
