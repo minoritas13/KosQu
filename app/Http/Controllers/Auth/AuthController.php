@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
+use App\Http\Controllers\Controller;
+use App\Models\User;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Auth\Events\Registered;
-use App\Models\User;
 
 class AuthController extends Controller
 {
@@ -28,7 +29,7 @@ class AuthController extends Controller
                 'min:8',
                 'max:64',
                 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&]).+$/',
-                'confirmed'
+                'confirmed',
             ],
             'no_hp' => ['required', 'string', 'min:10'],
         ]);
@@ -65,24 +66,34 @@ class AuthController extends Controller
         ]);
 
         if (Auth::attempt($request->only('email', 'password'), $request->filled('remember'))) {
-            $request->session()->regenerate();
 
+            $request->session()->regenerate();
             $user = Auth::user();
 
             // Cek verifikasi email
-            if (!$user->hasVerifiedEmail()) {
+            if (is_null($user->email_verified_at)) {
                 Auth::logout();
+
                 return redirect()->route('verification.notice')
                     ->with('warning', 'Silakan verifikasi email terlebih dahulu sebelum login.');
             }
-            
-            if ($user->role === 'admin') {
-                return redirect()->route('admin.dashboard')
-                    ->with('success', 'Selamat datang kembali, Admin!');
-            }
 
-            return redirect()->route('penyewa.dashboard')
-                ->with('success', 'Selamat datang kembali, ' . $user->name . '!');
+            // === Arahkan sesuai role ===
+            switch ($user->role) {
+
+                case 'admin':
+                    return redirect()->route('admin.dashboard')
+                        ->with('success', 'Selamat datang kembali, Admin '.$user->name.'!');
+
+                case 'penyewa':
+                    return redirect()->route('penyewa.dashboard')
+                        ->with('success', 'Selamat datang kembali, '.$user->name.'!');
+
+                default:
+                    Auth::logout();
+
+                    return back()->with('error', 'Role tidak valid.');
+            }
         }
 
         return back()->with('error', 'Email atau password salah.');

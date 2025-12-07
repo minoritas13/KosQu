@@ -19,6 +19,7 @@ class KamarFactory extends Factory
             'harga' => $this->faker->numberBetween(500000, 1500000),
             'status' => $this->faker->randomElement(['tersedia', 'terisi']),
             'deskripsi' => $this->faker->sentence(8),
+            'foto' => 'kamar/dummy.png',
             'created_at' => now(),
             'updated_at' => now(),
         ];

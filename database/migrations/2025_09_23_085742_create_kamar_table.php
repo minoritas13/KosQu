@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->decimal('harga', 12, 2);
             $table->enum('status', ['tersedia', 'terisi', 'perbaikan'])->default('tersedia');
             $table->text('deskripsi')->nullable();
+            $table->string('foto')->nullable(); 
             $table->timestamps();
 
             // Foreign key

@@ -1,8 +1,8 @@
 {{-- Navbar --}}
-<nav class="bg-gray-200/70 backdrop-blur-md shadow-sm py-4 px-8 flex justify-between items-center">
+<nav class="flex items-center justify-between px-8 py-4 shadow-sm bg-gray-200/70 backdrop-blur-md">
     <h1 class="text-xl font-bold text-gray-800">KostQu</h1>
-    <div class="space-x-6 text-gray-700 font-medium">
-        <a href="#" class="hover:text-blue-600">Beranda</a>
+    <div class="space-x-6 font-medium text-gray-700">
+        <a href="{{ route('welcome') }}" class="hover:text-blue-600">Beranda</a>
         <a href="#" class="hover:text-blue-600">Pencarian</a>
     </div>
     <div class="flex items-center space-x-4">

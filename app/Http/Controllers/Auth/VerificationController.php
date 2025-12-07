@@ -23,7 +23,7 @@ class VerificationController extends Controller
     public function verify(EmailVerificationRequest $request)
     {
         $request->fulfill();
-        return redirect()->route('dashboard')->with('success', 'Email berhasil diverifikasi!');
+        return redirect()->route('penyewa.dashboard')->with('success', 'Email berhasil diverifikasi!');
     }
 
     // Kirim ulang link verifikasi

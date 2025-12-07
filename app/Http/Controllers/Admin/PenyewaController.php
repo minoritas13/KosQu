@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
 
 class PenyewaController extends Controller
 {
@@ -12,7 +14,8 @@ class PenyewaController extends Controller
      */
     public function index()
     {
-        //
+        $penyewa = User::where('role', 'penyewa')->get();
+        return view('admin.penyewa.index', compact('penyewa'));
     }
 
     /**
@@ -20,7 +23,7 @@ class PenyewaController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.penyewa.create');
     }
 
     /**
@@ -28,15 +31,22 @@ class PenyewaController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        $request->validate([
+            'name'     => 'required',
+            'email'    => 'required|email|unique:users,email',
+            'no_hp'    => 'required',
+            'password' => 'required|min:6',
+        ]);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
+        User::create([
+            'name'     => $request->name,
+            'email'    => $request->email,
+            'no_hp'    => $request->no_hp,
+            'role'     => 'penyewa',
+            'password' => Hash::make($request->password),
+        ]);
+
+        return redirect()->route('admin.penyewa.index')->with('success', 'Penyewa berhasil ditambahkan.');
     }
 
     /**
@@ -44,7 +54,8 @@ class PenyewaController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $penyewa = User::findOrFail($id);
+        return view('admin.penyewa.edit', compact('penyewa'));
     }
 
     /**
@@ -52,7 +63,21 @@ class PenyewaController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $penyewa = User::findOrFail($id);
+
+        $request->validate([
+            'name'  => 'required',
+            'email' => 'required|email|unique:users,email,' . $id,
+            'no_hp' => 'required',
+        ]);
+
+        $penyewa->update([
+            'name'  => $request->name,
+            'email' => $request->email,
+            'no_hp' => $request->no_hp,
+        ]);
+
+        return redirect()->route('admin.penyewa.index')->with('success', 'Penyewa berhasil diperbarui.');
     }
 
     /**
@@ -60,6 +85,9 @@ class PenyewaController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $penyewa = User::findOrFail($id);
+        $penyewa->delete();
+
+        return redirect()->route('admin.penyewa.index')->with('success', 'Penyewa berhasil dihapus.');
     }
 }

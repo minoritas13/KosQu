@@ -1,49 +1,80 @@
 <?php
 
-namespace App\Http\Controllers\Pembayaran;
+namespace App\Http\Controllers\pembayaran;
 
-use App\Models\Kamar;
+use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\Pembayaran;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 
 class PembayaranController extends Controller
 {
+    // -------------------------------
+    //  HALAMAN PEMBAYARAN
+    // -------------------------------
     public function index($id)
     {
-
-        $booking = Booking::findorfail($id);
-
+        $booking = Booking::with('kamar')->findOrFail($id);
         return view('penyewa.pembayaran.index', compact('booking'));
     }
 
-    public function store(Request $request, $booking_id)
+    public function store(Request $request, $id)
     {
-
+        // VALIDASI sesuai form
         $request->validate([
-            'tggl_bayar'     => 'required|date',
-            'jumlah_bayar'   => 'required|numeric|min:0',
-            'metode_bayar'   => 'required|in:transfer,cash,e-wallet',
+            'jenis_pembayaran' => 'required|in:dp,full',
+            'metode_bayar' => 'required|in:transfer,e-wallet,cash',
+            'bukti_bayar' => 'required|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        $booking = Booking::findOrFail($booking_id);
+        $booking = Booking::findOrFail($id);
+        $harga = $booking->kamar->harga;
 
-        // simpan pembayaran
+        // Hitung total bayar dari input jenis pembayaran
+        $jumlah_bayar = $request->jenis_pembayaran === 'dp'
+            ? $harga * 0.3
+            : $harga;
+
+        // Upload bukti pembayaran
+        $buktiPath = null;
+        if ($request->hasFile('bukti_bayar')) {
+            $buktiPath = $request->file('bukti_bayar')->store('bukti-pembayaran', 'public');
+        }
+
+        // Simpan pembayaran ke DB
         $pembayaran = Pembayaran::create([
-            'booking_id'   => $booking->id,
-            'tggl_bayar'   => $request->tggl_bayar,
-            'jumlah_bayar' => $request->jumlah_bayar,
-            'metode_bayar' => $request->metode_bayar,
-            'status'       => 'pending',
+            'booking_id'    => $booking->id,
+            'tggl_bayar'    => now(),
+            'jumlah_bayar'  => $jumlah_bayar,
+            'metode_bayar'  => $request->metode_bayar,
+            'bukti_bayar'   => $buktiPath,
+            'status'        => 'pending',
         ]);
 
-        // update status booking
-        $booking->update([
-            'status' => 'menunggu_verifikasi'
+        // Update status booking
+        if ($request->jenis_pembayaran === 'full') {
+            $booking->update(['status' => 'disetujui']);
+        } else {
+            $booking->update(['status' => 'pending']);
+        }
+
+        // Update status kamar → terisi
+        $booking->kamar->update([
+            'status' => 'terisi'
         ]);
 
-        return redirect()->route('penyewa.dashboard')
-            ->with('success', 'Pembayaran berhasil dikirim, menunggu verifikasi admin.');
+        return redirect()
+            ->route('penyewa.pembayaran.success', $booking->id)
+            ->with('success', 'Pembayaran berhasil dicatat!');
+    }
+
+
+    // -------------------------------
+    // HALAMAN SUKSES PEMBAYARAN
+    // -------------------------------
+    public function success($id)
+    {
+        $booking = Booking::with(['kamar', 'pembayaran'])->findOrFail($id);
+        return view('penyewa.pembayaran.success', compact('booking'));
     }
 }

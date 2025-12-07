@@ -13,7 +13,8 @@ class Kamar extends Model
     protected $table = 'kamar';
     public $incrementing = false;
     protected $keyType = 'string';
-    protected $fillable = ['id', 'admin_id', 'nomor_kamar', 'tipe_kamar', 'harga', 'status', 'deskripsi'];
+
+    protected $fillable = ['id', 'admin_id', 'nomor_kamar', 'tipe_kamar', 'harga', 'status', 'foto', 'deskripsi'];
 
     protected static function boot()
     {

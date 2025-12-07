@@ -10,6 +10,9 @@ class RoleMiddleware
 {
     public function handle(Request $request, Closure $next, $role)
     {
+
+        //dd('middleware auth berjalan');
+
         if (!Auth::check() || Auth::user()->role !== $role) {
             abort(403, 'Akses ditolak.');
         }
