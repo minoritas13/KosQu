@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\KamarController;
 use App\Http\Controllers\Admin\PenyewaController;
 use App\Http\Controllers\Auth\VerificationController;
