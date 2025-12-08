@@ -28,9 +28,4 @@
     </div>
 
 </body>
-<<<<<<< HEAD
 @endsection
-=======
-
-</html>
->>>>>>> sulthon_dev
