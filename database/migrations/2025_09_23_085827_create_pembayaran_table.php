@@ -13,7 +13,7 @@ return new class extends Migration {
             $table->decimal('jumlah_bayar', 12, 2);
             $table->enum('metode_bayar', ['transfer', 'cash', 'e-wallet']);
             $table->enum('status', ['pending', 'selesai'])->default('pending');
-            $table->string('bukti_bayar')->nullable()->after('metode_bayar');
+            $table->string('bukti_bayar')->nullable(); 
             $table->timestamps();
 
             // Foreign key

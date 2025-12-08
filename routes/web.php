@@ -52,11 +52,19 @@ Route::middleware(['auth', 'verified', 'role:penyewa'])->prefix('penyewa')->grou
 
     Route::get('/dashboard', [PenyewaDashboardController::class, 'index'])->name('penyewa.dashboard');
 
-    Route::get('kamar/{id}/pesan' ,[BookingPenyewaController::class, 'index'] )->name('penyewa.pesan');
+    // Ganti 'index' jadi 'create'
+    Route::get('kamar/{id}/pesan', [BookingPenyewaController::class, 'create'])->name('penyewa.pesan');
+
+    // Store tetep Store (Udah bener)
     Route::post('kamar/{id}/pesan', [BookingPenyewaController::class, 'store'])->name('kamar.pesan');
 
-    Route::get('booking/{id}/pembayaran',[PembayaranController::class, 'index'])->name('penyewa.pembayaran');
-    Route::post('booking/{id}/pembayaran',[PembayaranController::class, 'store'])->name('penyewa.pembayaran.store');
+    // Rute untuk nampilin Form Bayar (Dipanggil oleh redirect Booking)
+Route::get('booking/{id}/pembayaran', [PembayaranController::class, 'create'])
+    ->name('penyewa.pembayaran.create'); // <--- INI KUNCI YG HARUS ADA
+
+// Rute untuk memproses Simpan Bukti Bayar (Dipanggil dari Form di create.blade.php)
+Route::post('booking/{id}/pembayaran', [PembayaranController::class, 'store'])
+    ->name('penyewa.pembayaran.store');
 
     Route::get('pembayaran/{id}/sukses', [PembayaranController::class, 'success'])
     ->name('penyewa.pembayaran.success');
@@ -72,7 +80,9 @@ Route::middleware(['auth', 'verified', 'role:penyewa'])->prefix('penyewa')->grou
     Route::get('/profile/password', [PenyewaProfileController::class, 'password'])->name('profile.password');
     Route::post('/profile/password/update', [PenyewaProfileController::class, 'updatePassword'])->name('profile.password.update');
 
-    Route::get('/pembayaran', [RiwayatPembayaranController::class, 'index'])->name('penyewa.riwayat.pembayaran');
+   // 1. Jalur ke Riwayat (Index)
+    Route::get('/riwayat-pembayaran', [PembayaranController::class, 'index'])
+    ->name('penyewa.riwayat.pembayaran');
 
 
 });

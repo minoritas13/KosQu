@@ -12,11 +12,31 @@ class PembayaranController extends Controller
     // -------------------------------
     //  HALAMAN PEMBAYARAN
     // -------------------------------
-    public function index($id)
-    {
-        $booking = Booking::with('kamar')->findOrFail($id);
-        return view('penyewa.pembayaran.index', compact('booking'));
-    }
+    public function index()
+{
+    $userId = \Illuminate\Support\Facades\Auth::id();
+
+    // Logic Riwayat (Ambil banyak data)
+    $pembayarans = \App\Models\Pembayaran::whereHas('booking', function($q) use ($userId) {
+                        $q->where('user_id', $userId);
+                    })
+                    ->with(['booking.kamar'])
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+
+    // Lempar ke View Dashboard/Riwayat
+    return view('penyewa.pembayaran.index', compact('pembayarans'));
+}
+
+// 2. FUNGSI FORM BAYAR (Butuh $id, ini code lama lu tadi)
+public function create($id)
+{
+    // Logic Form (Ambil 1 data booking)
+    $booking = \App\Models\Booking::with('kamar')->findOrFail($id);
+
+    // Lempar ke View Form Bayar (Nanti kita siapin filenya)
+    return view('penyewa.pembayaran.create', compact('booking'));
+}
 
     public function store(Request $request, $id)
     {
