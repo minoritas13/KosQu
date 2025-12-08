@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Penyewa;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class PembayaranController extends Controller
+class RiwayatPembayaranController extends Controller
 {
     public function index()
     {
@@ -34,6 +34,6 @@ class PembayaranController extends Controller
             ],
         ];
 
-        return view('penyewa.pembayaran.index', compact('pembayarans'));
+        return view('penyewa.pembayaran.riwayat-pembayaran', compact('pembayarans'));
     }
 }

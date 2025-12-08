@@ -16,11 +16,11 @@
                 name="keyword"
                 value="{{ request('keyword') }}"
                 placeholder="Cari nomor kamar / kata kunci..."
-                class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-400 outline-none">
+                class="w-full p-3 border border-gray-300 outline-none rounded-xl focus:ring-2 focus:ring-purple-400">
 
             {{-- FILTER HARGA --}}
             <select name="harga"
-                class="px-4 py-3 border border-gray-300 rounded-xl bg-white focus:ring-2 focus:ring-purple-400 outline-none">
+                class="px-4 py-3 bg-white border border-gray-300 outline-none rounded-xl focus:ring-2 focus:ring-purple-400">
                 <option value="">Harga</option>
                 <option value="asc"  {{ request('harga')=='asc' ? 'selected':'' }}>Termurah</option>
                 <option value="desc" {{ request('harga')=='desc' ? 'selected':'' }}>Termahal</option>
@@ -28,7 +28,7 @@
 
             {{-- FILTER FASILITAS --}}
             <select name="fasilitas"
-                class="px-4 py-3 border border-gray-300 rounded-xl bg-white focus:ring-2 focus:ring-purple-400 outline-none">
+                class="px-4 py-3 bg-white border border-gray-300 outline-none rounded-xl focus:ring-2 focus:ring-purple-400">
                 <option value="">Fasilitas</option>
                 <option value="AC"  {{ request('fasilitas')=='AC' ? 'selected':'' }}>AC</option>
                 <option value="Kamar Mandi Dalam" {{ request('fasilitas')=='Kamar Mandi Dalam' ? 'selected':'' }}>Kamar Mandi Dalam</option>
@@ -37,7 +37,7 @@
 
             {{-- URUTKAN --}}
             <select name="urutkan"
-                class="px-4 py-3 border border-gray-300 rounded-xl bg-white focus:ring-2 focus:ring-purple-400 outline-none">
+                class="px-4 py-3 bg-white border border-gray-300 outline-none rounded-xl focus:ring-2 focus:ring-purple-400">
                 <option value="">Urutkan</option>
                 <option value="newest" {{ request('urutkan')=='newest' ? 'selected':'' }}>Terbaru</option>
                 <option value="oldest" {{ request('urutkan')=='oldest' ? 'selected':'' }}>Terlama</option>
@@ -52,7 +52,7 @@
     {{-- JIKA DATA KOSONG --}}
     @if($kamar->count() == 0)
         <div class="p-6 text-center bg-red-50 rounded-xl">
-            <p class="text-red-600 font-semibold">Tidak ada kamar ditemukan dengan filter tersebut.</p>
+            <p class="font-semibold text-red-600">Tidak ada kamar ditemukan dengan filter tersebut.</p>
         </div>
     @endif
 
@@ -67,7 +67,7 @@
                         src="{{ $item->foto ? asset('storage/' . $item->foto) : 'https://via.placeholder.com/600x400?text=Picture' }}"
                         class="object-cover w-full h-48">
 
-                    <span class="absolute px-3 py-1 text-xs text-white 
+                    <span class="absolute px-3 py-1 text-xs text-white
                         {{ $item->status == 'tersedia' ? 'bg-green-500' : 'bg-red-500' }}
                         rounded-full top-3 right-3">
                         {{ ucfirst($item->status) }}
@@ -86,7 +86,7 @@
                     </p>
 
                     <div class="flex justify-between gap-3 mt-4">
-                        <a href="{{ route('kamar.show', $item->id) }}"
+                        <a href="#"
                            class="w-1/2 px-4 py-2 text-center border border-gray-300 rounded-lg">
                             Lihat Detail
                         </a>

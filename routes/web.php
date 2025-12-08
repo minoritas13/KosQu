@@ -2,14 +2,12 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\Admin\AdminDashboardController;
-use App\Http\Controllers\Admin\AdminPembayaranController;
 use App\Http\Controllers\Admin\KamarController;
 use App\Http\Controllers\Admin\PenyewaController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Pembayaran\PembayaranController;
 use App\Http\Controllers\Penyewa\BookingPenyewaController;
+use App\Http\Controllers\Penyewa\PenyewaProfileController;
 use App\Http\Controllers\Penyewa\PenyewaDashboardController;
 
 /*
@@ -44,12 +42,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/email/verify', [VerificationController::class, 'notice'])
         ->name('verification.notice');
 
-    // Link verifikasi yang dikirim ke email
     Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])
         ->middleware('signed')
         ->name('verification.verify');
 
-    // Kirim ulang email verifikasi
     Route::post('/email/verification-notification', [VerificationController::class, 'send'])
         ->middleware('throttle:6,1')
         ->name('verification.send');

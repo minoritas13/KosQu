@@ -34,4 +34,9 @@ class Kamar extends Model
     {
         return $this->hasMany(Booking::class, 'kamar_id');
     }
+
+    public function getRouteKeyName()
+    {
+        return 'id';
+    }
 }

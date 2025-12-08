@@ -1,11 +1,7 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KostQu | Beranda</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
+@extends('layouts.app')
+
+@section('content')
+<h1 class="text-2xl font-bold">Daftar Kamar</h1>
 
 <body class="bg-gray-100 text-gray-800">
 
