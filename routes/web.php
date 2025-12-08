@@ -92,3 +92,9 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('ad
 
     Route::resource('penyewa', PenyewaController::class);
 });
+
+// --- HALAMAN FOOTER (STATIS) ---
+// Gak perlu controller, langsung view aja biar cepet
+Route::view('/tentang-kami', 'footer.tentang')->name('footer.tentang');
+Route::view('/kebijakan-privasi', 'footer.privasi')->name('footer.privasi');
+Route::view('/syarat-ketentuan', 'footer.syarat')->name('footer.syarat');
