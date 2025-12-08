@@ -13,7 +13,7 @@
         </a>
 
         <a href="{{ route('penyewa.riwayat.pembayaran') }}" class="hover:text-[#6a5acd] transition">
-            Pembayaran
+            Pembayara
         </a>
     </div>
 
