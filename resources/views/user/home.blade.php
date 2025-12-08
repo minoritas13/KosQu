@@ -34,54 +34,76 @@
     </div>
 </section>
 
-    {{-- DAFTAR KAMAR --}}
-    <section id="daftar-kamar" class="py-16 px-6 bg-white">
-        <h2 class="text-2xl font-bold text-center mb-10">Daftar Kamar Tersedia</h2>
+    {{-- GRID KAMAR --}}
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
 
-        <div class="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-            @forelse($kamar as $item)
-            <div class="bg-white rounded-xl shadow hover:shadow-lg transition overflow-hidden">
-                <img src="{{ $item->foto ? asset('storage/'.$item->foto) : asset('images/default-room.jpg') }}"
-                     class="w-full h-48 object-cover">
+    {{-- LOOPING DATA DARI CONTROLLER --}}
+    {{-- Kita pake $kamar karena itu nama variabel di controller lu --}}
+    @forelse($kamar as $item)
 
-                <div class="p-4">
-                    <h3 class="font-semibold text-lg">
-                        Kamar {{ $item->nomor_kamar }} - {{ $item->tipe_kamar }}
+        <div class="group bg-white rounded-3xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300 hover:-translate-y-1">
+            
+            {{-- Bagian Gambar --}}
+            <div class="relative">
+                {{-- Logika Gambar: Cek kalau ada foto di database, kalau null pake default --}}
+                {{-- Sesuaikan path 'storage/' kalau lu pake php artisan storage:link --}}
+                <img src="{{ $item->foto ? asset('storage/' . $item->foto) : asset('images/room-default.jpg') }}" 
+                     class="object-cover w-full h-56 group-hover:scale-105 transition duration-500"
+                     alt="Foto Kost">
+                
+                {{-- Badge Tipe Kamar --}}
+                <span class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-blue-600 shadow-sm uppercase">
+                    {{ $item->tipe_kamar }}
+                </span>
+            </div>
+
+            {{-- Bagian Info --}}
+            <div class="p-6">
+                <div class="flex justify-between items-start mb-2">
+                    {{-- Judul: Gabungan Tipe & Nomor --}}
+                    <h3 class="text-xl font-bold text-gray-900">
+                        {{ $item->tipe_kamar }} - {{ $item->nomor_kamar }}
                     </h3>
+                    <div class="flex text-yellow-400 text-sm">★ 4.8</div>
+                </div>
 
-                    <p class="font-bold text-blue-600 mt-1">
-                        Rp {{ number_format($item->harga,0,',','.') }}/Bulan
-                    </p>
+                {{-- Deskripsi: Dipotong biar gak kepanjangan (limit 40 huruf) --}}
+                <p class="text-sm text-gray-500 mb-4 line-clamp-1">
+                    {{ Str::limit($item->deskripsi, 40) }}
+                </p>
+                
+                {{-- Fasilitas (Hardcode dlu karena kolomnya nyatu di deskripsi) --}}
+                <div class="flex gap-2 mb-4">
+                    <span class="px-2 py-1 bg-gray-50 text-xs text-gray-600 rounded-md border border-gray-100">❄️ AC</span>
+                    <span class="px-2 py-1 bg-gray-50 text-xs text-gray-600 rounded-md border border-gray-100">📶 WiFi</span>
+                </div>
 
-                    <p class="text-sm text-gray-600 mt-2">
-                        {{ $item->deskripsi ?? 'Tidak ada deskripsi' }}
-                    </p>
-
-                    <span class="inline-block mt-2 px-3 py-1 text-xs rounded-full
-                        {{ $item->status == 'tersedia' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }}">
-                        {{ ucfirst($item->status) }}
-                    </span>
-
-                    @if($item->status == 'tersedia')
-                        <a href="{{ route('kamar.pesan', $item->id) }}"
-                           class="block text-center mt-4 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">
-                            Pesan Sekarang
-                        </a>
-                    @else
-                        <button disabled
-                           class="block w-full mt-4 bg-gray-300 text-gray-600 py-2 rounded-lg cursor-not-allowed">
-                            Tidak Tersedia
-                        </button>
-                    @endif
+                <div class="flex items-center justify-between pt-4 border-t border-gray-50">
+                    <div>
+                        <span class="text-xs text-gray-400">Harga per bulan</span>
+                        {{-- Format Rupiah Otomatis --}}
+                        <p class="text-lg font-bold text-blue-600">
+                            Rp {{ number_format($item->harga, 0, ',', '.') }}
+                        </p>
+                    </div>
+                    
+                    {{-- Tombol Detail --}}
+                    <a href="#" class="bg-gray-900 text-white p-3 rounded-xl hover:bg-blue-600 transition-colors">
+                        👉
+                    </a>
                 </div>
             </div>
-            @empty
-                <p class="text-center col-span-3 text-gray-500">
-                    Belum ada kamar tersedia.
-                </p>
-            @endforelse
         </div>
-    </section>
+
+    @empty
+        {{-- Tampilan kalau Database Kosong/Gak ada yang 'tersedia' --}}
+        <div class="col-span-1 md:col-span-3 text-center py-12 bg-gray-50 rounded-3xl border border-dashed border-gray-300">
+            <p class="text-gray-500 text-lg mb-2">Yah, belum ada kamar yang tersedia nih.</p>
+            <p class="text-sm text-gray-400">Coba cek lagi nanti ya!</p>
+        </div>
+    @endforelse
+
+</div>
 
     
 <!-- CARA KERJA -->

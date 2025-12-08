@@ -12,12 +12,18 @@ class PembayaranController extends Controller
     // -------------------------------
     //  HALAMAN PEMBAYARAN
     // -------------------------------
-    public function index($id)
-    {
-        $booking = Booking::with('kamar')->findOrFail($id);
-        return view('penyewa.pembayaran.index', compact('booking'));
-    }
+// HAPUS ($id) - Kita gak butuh ID spesifik, kita butuh SEMUA.
+public function index()
+{
+    // Ambil SEMUA booking milik user yang lagi login
+    // Kita namain variabelnya $pembayarans biar cocok sama View baru kita
+    $pembayarans = \App\Models\Booking::with('kamar')
+                    ->where('user_id', \Illuminate\Support\Facades\Auth::id())
+                    ->orderBy('created_at', 'desc')
+                    ->get();
 
+    return view('penyewa.pembayaran.index', compact('pembayarans'));
+}
     public function store(Request $request, $id)
     {
         // VALIDASI sesuai form

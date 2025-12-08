@@ -18,9 +18,11 @@ use App\Http\Controllers\Penyewa\PenyewaDashboardController;
 |--------------------------------------------------------------------------
 */
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('welcome');
+use App\Http\Controllers\DashboardUser;
+
+// Ganti namanya jadi 'home'
+Route::get('/', [DashboardUser::class, 'index'])->name('home');
+
 
 // ================= AUTH =================
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -30,7 +32,12 @@ Route::get('/register', [AuthController::class, 'showRegister'])->name('register
 Route::post('/register', [AuthController::class, 'register'])->name('register.submit');
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
+// --- TAMBAHAN PROFILE (SISIPIN DI SINI) ---
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'edit'])->name('profile');
+    Route::put('/profile', [App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
+});
+// ================ EMAIL VERIFICATION ================
 Route::middleware('auth')->group(function () {
 
     // Halaman "Silakan verifikasi email Anda"
@@ -56,13 +63,21 @@ Route::middleware(['auth', 'verified', 'role:penyewa'])->prefix('penyewa')->grou
     Route::get('kamar/{id}/pesan' ,[BookingPenyewaController::class, 'index'] )->name('penyewa.pesan');
     Route::post('kamar/{id}/pesan', [BookingPenyewaController::class, 'store'])->name('kamar.pesan');
 
-    Route::get('booking/{id}/pembayaran',[PembayaranController::class, 'index'])->name('penyewa.pembayaran');
-    Route::post('booking/{id}/pembayaran',[PembayaranController::class, 'store'])->name('penyewa.pembayaran.store');
+    // --- PERBAIKAN DI SINI ---
+    
+    // 1. Rute untuk Menu Header (Riwayat Pembayaran) - JANGAN PAKE {id}
+    Route::get('/riwayat-pembayaran', [PembayaranController::class, 'index'])->name('penyewa.pembayaran');
 
+    // 2. Rute untuk Proses Bayar (Action) - Ini baru butuh {id}
+    Route::post('booking/{id}/pembayaran', [PembayaranController::class, 'store'])->name('penyewa.pembayaran.store');
+    
+    // 3. Halaman Sukses
     Route::get('pembayaran/{id}/sukses', [PembayaranController::class, 'success'])
     ->name('penyewa.pembayaran.success');
-
+    
+    Route::get('/search', [DashboardUser::class, 'index'])->name('pencarian');
 });
+
 
 // ---------- DASHBOARD ADMIN -----------
 Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
@@ -72,10 +87,11 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('ad
     Route::get('/pembayaran', [AdminPembayaranController::class, 'index'])->name('pembayaran');
     Route::put('/pembayaran/konfirmasi/{id}', [AdminPembayaranController::class, 'konfirmasi'])
         ->name('pembayaran.konfirmasi');
-
+Route::get('booking/{id}/pembayaran',[PembayaranController::class, 'create'])->name('penyewa.pembayaran.bayar');
 
 
     Route::resource('kamar', KamarController::class);
 
     Route::resource('penyewa', PenyewaController::class);
 });
+
