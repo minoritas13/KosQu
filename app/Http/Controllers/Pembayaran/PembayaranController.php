@@ -12,18 +12,32 @@ class PembayaranController extends Controller
     // -------------------------------
     //  HALAMAN PEMBAYARAN
     // -------------------------------
-// HAPUS ($id) - Kita gak butuh ID spesifik, kita butuh SEMUA.
-public function index()
+    public function index()
 {
-    // Ambil SEMUA booking milik user yang lagi login
-    // Kita namain variabelnya $pembayarans biar cocok sama View baru kita
-    $pembayarans = \App\Models\Booking::with('kamar')
-                    ->where('user_id', \Illuminate\Support\Facades\Auth::id())
+    $userId = \Illuminate\Support\Facades\Auth::id();
+
+    // Logic Riwayat (Ambil banyak data)
+    $pembayarans = \App\Models\Pembayaran::whereHas('booking', function($q) use ($userId) {
+                        $q->where('user_id', $userId);
+                    })
+                    ->with(['booking.kamar'])
                     ->orderBy('created_at', 'desc')
                     ->get();
 
+    // Lempar ke View Dashboard/Riwayat
     return view('penyewa.pembayaran.index', compact('pembayarans'));
 }
+
+// 2. FUNGSI FORM BAYAR (Butuh $id, ini code lama lu tadi)
+public function create($id)
+{
+    // Logic Form (Ambil 1 data booking)
+    $booking = \App\Models\Booking::with('kamar')->findOrFail($id);
+
+    // Lempar ke View Form Bayar (Nanti kita siapin filenya)
+    return view('penyewa.pembayaran.create', compact('booking'));
+}
+
     public function store(Request $request, $id)
     {
         // VALIDASI sesuai form

@@ -9,12 +9,12 @@ use Illuminate\Http\Request;
 
 class BookingPenyewaController extends Controller
 {
-    public function index($id)
-    {
-        $kamar = Kamar::findorfail($id);
-
-        return view('penyewa.kamar.pesan', compact('kamar'));
-    }
+// JANGAN 'index', TAPI 'create' KARENA INI BUAT NAMPILIN FORM
+public function create($id) 
+{
+    $kamar = Kamar::findOrFail($id);
+    return view('penyewa.kamar.pesan', compact('kamar'));
+}
 
     public function store(Request $request, $id)
     {
@@ -40,7 +40,7 @@ class BookingPenyewaController extends Controller
 
         // Redirect ke halaman pembayaran berdasarkan ID booking
         return redirect()
-            ->route('penyewa.pembayaran', ['id' => $booking->id])
-            ->with('success', 'Silakan lakukan pembayaran untuk menyelesaikan booking.');
-    }
+        ->route('penyewa.pembayaran.create', ['id' => $booking->id]) // <--- TARGET BARU!
+        ->with('success', 'Booking Berhasil! Selesaikan pembayaran.');
+        }
 }

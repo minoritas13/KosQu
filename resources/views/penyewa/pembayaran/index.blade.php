@@ -1,185 +1,235 @@
 @extends('layouts.app')
 
+
+
 @section('content')
-<div class="container grid grid-cols-1 gap-6 py-6 mx-auto md:grid-cols-3">
 
-    {{-- LEFT SIDE --}}
-    <div class="p-6 space-y-4 bg-white shadow-lg md:col-span-2 rounded-xl">
 
-        <h2 class="text-2xl font-semibold">Konfirmasi Pembayaran</h2>
-        <p class="text-gray-600">Silahkan pilih metode pembayaran.</p>
 
-        <form action="{{ route('penyewa.pembayaran.store', $booking->id) }}" method="POST" enctype="multipart/form-data" class="space-y-5">
-            @csrf
+{{-- 1. LOGIKA HITUNGAN (Di sini aja biar Controller aman) --}}
 
-            {{-- JENIS PEMBAYARAN --}}
-            <div>
-                <h3 class="mb-3 font-semibold">Jenis Pembayaran</h3>
-                <div class="grid grid-cols-1 gap-3">
-                    {{-- DP --}}
-                    <label class="relative flex items-center gap-4 p-4 border rounded-lg cursor-pointer hover:bg-gray-50 transition-all has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50">
-                        <input type="radio" name="jenis_pembayaran" value="dp" class="w-5 h-5 text-blue-600 border-gray-300 focus:ring-blue-500" required>
-                        <div>
-                            <p class="font-medium text-gray-900">DP 30%</p>
-                            <p class="text-sm text-gray-500">Bayar 30% dari total harga sekarang.</p>
-                        </div>
-                    </label>
+@php
 
-                    {{-- FULL --}}
-                    <label class="relative flex items-center gap-4 p-4 border rounded-lg cursor-pointer hover:bg-gray-50 transition-all has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50">
-                        <input type="radio" name="jenis_pembayaran" value="full" class="w-5 h-5 text-blue-600 border-gray-300 focus:ring-blue-500">
-                        <div>
-                            <p class="font-medium text-gray-900">Full Payment</p>
-                            <p class="text-sm text-gray-500">Bayar 100% sekarang.</p>
-                        </div>
-                    </label>
-                </div>
-            </div>
+    // Kita cek dulu datanya ada gak
 
-            {{-- METODE PEMBAYARAN --}}
-            <div>
-                <h3 class="mb-3 font-semibold">Metode Pembayaran</h3>
-                <div class="grid grid-cols-1 gap-3">
-                    {{-- TRANSFER --}}
-                    <label class="relative flex items-center gap-4 p-4 border rounded-lg cursor-pointer hover:bg-gray-50 transition-all has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50">
-                        <input type="radio" name="metode_bayar" value="transfer" class="w-5 h-5 text-blue-600 border-gray-300 focus:ring-blue-500" required>
-                        <div>
-                            <p class="font-medium text-gray-900">Transfer Bank</p>
-                            <p class="text-sm text-gray-500">BCA 1234567890 a.n KosQu</p>
-                        </div>
-                    </label>
+    $listBayar = $pembayarans ?? collect([]); 
 
-                    {{-- E-WALLET --}}
-                    <label class="relative flex items-center gap-4 p-4 border rounded-lg cursor-pointer hover:bg-gray-50 transition-all has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50">
-                        <input type="radio" name="metode_bayar" value="e-wallet" class="w-5 h-5 text-blue-600 border-gray-300 focus:ring-blue-500">
-                        <div>
-                            <p class="font-medium text-gray-900">E-Wallet</p>
-                            <p class="text-sm text-gray-500">0895-xxxx-xxxx (Dana/Ovo/Gopay)</p>
-                        </div>
-                    </label>
 
-                    {{-- CASH — hanya muncul jika jenis pembayaran = DP --}}
-                    <label id="cash-section" class="hidden relative flex items-center gap-4 p-4 border rounded-lg cursor-pointer hover:bg-gray-50 transition-all has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50">
-                        <input type="radio" name="metode_bayar" value="cash" class="w-5 h-5 text-blue-600 border-gray-300 focus:ring-blue-500">
-                        <div>
-                            <p class="font-medium text-gray-900">Cash (Bayar di Tempat)</p>
-                            <p class="text-sm text-gray-500">Bayar sisa tagihan langsung di lokasi.</p>
-                        </div>
-                    </label>
-                </div>
-            </div>
 
-            {{-- UPLOAD BUKTI (Akan di-hide kalau pilih Cash) --}}
-            <div id="upload-section" class="mt-4 p-4 bg-gray-50 rounded-lg border border-dashed border-gray-300">
-                <label class="block mb-2 font-semibold text-gray-700">Upload Bukti Pembayaran <span class="text-red-500">*</span></label>
-                <input type="file" id="bukti_bayar_input" name="bukti_bayar" accept="image/*" required
-                    class="w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-white focus:outline-none">
-                <p class="mt-1 text-xs text-gray-500">Format: JPG, PNG, PDF. Maks 2MB.</p>
-            </div>
+    // Hitung Total Pengeluaran (Cuma yang Lunas)
 
-            <button type="submit" class="w-full py-3 font-bold text-white bg-blue-600 rounded-lg hover:bg-blue-700 shadow-md transition duration-300">
-                Konfirmasi Pembayaran
-            </button>
+    $totalPengeluaran = $listBayar->where('status', 'lunas')->sum('jumlah_bayar');
 
-        </form>
-    </div>
 
-    {{-- RIGHT SIDE --}}
-    <div class="p-6 space-y-4 bg-white shadow-lg rounded-xl h-fit sticky top-6">
 
-        <h3 class="text-xl font-semibold border-b pb-2">Ringkasan Pesanan</h3>
+    // Hitung Tagihan Pending
 
-        <div class="overflow-hidden rounded-lg">
-            <img src="{{ Storage::url($booking->kamar->foto) }}" class="object-cover w-full h-48 hover:scale-105 transition duration-300">
+    $tagihanPending = $listBayar->where('status', 'pending')->count();
+
+@endphp
+
+
+
+<div class="min-h-screen bg-gray-50 py-10">
+
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        
+
+        {{-- HEADER SIMPLE --}}
+
+        <div class="text-center mb-10">
+
+            <h1 class="text-3xl font-extrabold text-gray-900">Dompet Saya 💸</h1>
+
+            <p class="text-gray-500 mt-2">Pantau semua pengeluaran nge-kost kamu di sini.</p>
+
         </div>
 
-        <div>
-            <p class="text-lg font-bold text-gray-800">{{ $booking->kamar->tipe_kamar }}</p>
-            <p class="text-gray-500 text-sm">No. Kamar: {{ $booking->kamar->nomor_kamar }}</p>
+
+
+        {{-- RINGKASAN DUIT (Card Atas) --}}
+
+        <div class="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-3xl p-8 text-white shadow-xl mb-10 relative overflow-hidden">
+
+            <div class="absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-white opacity-10 rounded-full blur-2xl"></div>
+
+            
+
+            <div class="relative z-10 flex flex-col md:flex-row justify-between items-center gap-6">
+
+                <div>
+
+                    <p class="text-blue-100 text-sm font-medium uppercase tracking-wider">Total Pengeluaran</p>
+
+                    <h2 class="text-4xl font-bold mt-1">
+
+                        Rp {{ number_format($totalPengeluaran, 0, ',', '.') }}
+
+                    </h2>
+
+                </div>
+
+                
+
+                <div class="flex gap-4">
+
+                    <div class="bg-white/20 backdrop-blur-sm p-4 rounded-xl text-center">
+
+                        <span class="block text-2xl font-bold text-yellow-300">{{ $tagihanPending }}</span>
+
+                        <span class="text-xs text-blue-100">Tagihan Pending</span>
+
+                    </div>
+
+                    <div class="bg-white/20 backdrop-blur-sm p-4 rounded-xl text-center">
+
+                        <span class="block text-2xl font-bold text-green-300">
+
+                            {{ $listBayar->where('status', 'lunas')->count() }}
+
+                        </span>
+
+                        <span class="text-xs text-blue-100">Berhasil</span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
         </div>
 
-        <div class="pt-4 space-y-3 border-t">
-            <div class="flex justify-between">
-                <span class="text-gray-600">Harga Sewa</span>
-                <span class="font-semibold">Rp {{ number_format($booking->kamar->harga, 0, ',', '.') }}</span>
-            </div>
 
-            {{-- DP SUMMARY --}}
-            <div id="dp-text" class="hidden flex justify-between bg-blue-50 p-2 rounded text-blue-800">
-                <span>DP (30%)</span>
-                <span class="font-bold">Rp {{ number_format($booking->kamar->harga * 0.3, 0, ',', '.') }}</span>
-            </div>
 
-            {{-- FULL SUMMARY --}}
-            <div id="full-text" class="hidden flex justify-between bg-green-50 p-2 rounded text-green-800">
-                <span>Total Bayar</span>
-                <span class="font-bold">Rp {{ number_format($booking->kamar->harga, 0, ',', '.') }}</span>
-            </div>
+        {{-- LIST TRANSAKSI --}}
+
+        <div class="space-y-4">
+
+            <h3 class="text-lg font-bold text-gray-900 mb-4">Riwayat Transaksi</h3>
+
+
+
+            @forelse($listBayar as $item)
+
+                <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm hover:shadow-md transition duration-300 flex flex-col sm:flex-row items-center gap-5">
+
+                    
+
+                    {{-- Ikon Status (Kiri) --}}
+
+                    <div class="w-16 h-16 rounded-full bg-blue-50 flex items-center justify-center flex-shrink-0 text-blue-600">
+
+                        @if($item->status == 'lunas')
+
+                            <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+
+                        @elseif($item->status == 'pending')
+
+                            <svg class="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+
+                        @else
+
+                            <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+
+                        @endif
+
+                    </div>
+
+
+
+                    {{-- Info Tengah --}}
+
+                    <div class="flex-1 text-center sm:text-left">
+
+                        <h4 class="font-bold text-gray-900 text-lg">
+
+                            {{ $item->booking->kamar->tipe_kamar ?? 'Pembayaran Kost' }}
+
+                        </h4>
+
+                        <p class="text-gray-500 text-sm">
+
+                            {{ \Carbon\Carbon::parse($item->created_at)->format('d M Y') }} 
+
+                            <span class="mx-1">•</span> 
+
+                            ID: #{{ substr($item->id, 0, 6) }}
+
+                        </p>
+
+                    </div>
+
+
+
+                    {{-- Harga & Badge (Kanan) --}}
+
+                    <div class="text-center sm:text-right">
+
+                        <p class="text-lg font-bold text-gray-900">
+
+                            Rp {{ number_format($item->jumlah_bayar, 0, ',', '.') }}
+
+                        </p>
+
+                        
+
+                        <div class="mt-1">
+
+                            @if($item->status == 'lunas')
+
+                                <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700">
+
+                                    ✅ Lunas
+
+                                </span>
+
+                            @elseif($item->status == 'pending')
+
+                                <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-yellow-100 text-yellow-700">
+
+                                    ⏳ Menunggu Konfirmasi
+
+                                </span>
+
+                            @else
+
+                                <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-red-100 text-red-700">
+
+                                    ❌ Gagal
+
+                                </span>
+
+                            @endif
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            @empty
+
+                {{-- Tampilan Kosong --}}
+
+                <div class="text-center py-12">
+
+                    <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+
+                        <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+
+                    </div>
+
+                    <p class="text-gray-500 font-medium">Belum ada riwayat transaksi.</p>
+
+                </div>
+
+            @endforelse
+
         </div>
 
     </div>
 
 </div>
 
-{{-- SCRIPT DINAMIS --}}
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const dpText = document.getElementById('dp-text');
-        const fullText = document.getElementById('full-text');
-        const cashSection = document.getElementById('cash-section');
-        const uploadSection = document.getElementById('upload-section');
-        const buktiInput = document.getElementById('bukti_bayar_input');
-
-        const typeRadios = document.querySelectorAll('input[name="jenis_pembayaran"]');
-        const methodRadios = document.querySelectorAll('input[name="metode_bayar"]');
-
-        // Logic Ganti Jenis Pembayaran (DP vs Full)
-        typeRadios.forEach(radio => {
-            radio.addEventListener("change", function() {
-                // Reset tampilan ringkasan
-                dpText.classList.add("hidden");
-                fullText.classList.add("hidden");
-                
-                // Reset opsi Cash
-                cashSection.classList.add("hidden");
-                
-                // Kalau pilih DP
-                if (this.value === "dp") {
-                    dpText.classList.remove("hidden");
-                    cashSection.classList.remove("hidden");
-                    cashSection.classList.add("flex");
-                }
-
-                // Kalau pilih Full
-                if (this.value === "full") {
-                    fullText.classList.remove("hidden");
-                    
-                    // Kalau user sebelumnya pilih cash, kita reset radio button metode bayarnya
-                    const cashInput = document.querySelector('input[value="cash"]');
-                    if(cashInput.checked) {
-                        cashInput.checked = false;
-                        // Kembalikan wajib upload karena cash ga boleh di full
-                        uploadSection.classList.remove("hidden");
-                        buktiInput.required = true;
-                    }
-                }
-            });
-        });
-
-        // Logic Ganti Metode Bayar (Transfer vs Cash)
-        methodRadios.forEach(radio => {
-            radio.addEventListener("change", function() {
-                if (this.value === 'cash') {
-                    // Kalau Cash, sembunyikan upload file & matikan required
-                    uploadSection.classList.add("hidden");
-                    buktiInput.required = false;
-                } else {
-                    // Kalau Transfer/E-wallet, wajib upload
-                    uploadSection.classList.remove("hidden");
-                    buktiInput.required = true;
-                }
-            });
-        });
-    });
-</script>
 @endsection

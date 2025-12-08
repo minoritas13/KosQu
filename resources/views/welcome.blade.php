@@ -2,187 +2,175 @@
 
 @section('content')
 
-{{-- WRAPPER BACKGROUND (Untuk memberikan depth/kedalaman) --}}
-<div class="relative overflow-hidden bg-gradient-to-b from-blue-50 via-white to-white">
+{{-- HERO SECTION --}}
+<section class="relative h-[85vh] flex items-center justify-center bg-gray-900 overflow-hidden">
+    {{-- Background Image --}}
+    <div class="absolute inset-0 z-0">
+        <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=2340&q=80" 
+             alt="Background Kost" 
+             class="w-full h-full object-cover opacity-40">
+        <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-gray-900/50"></div>
+    </div>
 
-    {{-- DECORATION (Blob Abstrak di belakang biar modern) --}}
-    <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-100 rounded-full blur-3xl opacity-60 -translate-y-1/2 translate-x-1/4 pointer-events-none"></div>
+    {{-- Content Hero --}}
+    <div class="relative z-10 max-w-4xl px-4 mx-auto text-center space-y-6">
+        <span class="inline-block px-4 py-1.5 rounded-full bg-blue-600/20 border border-blue-500 text-blue-300 text-sm font-medium tracking-wide mb-4 backdrop-blur-sm">
+            🚀 Solusi Cari Kost No. 1 di Lampung
+        </span>
+        
+        <h1 class="text-4xl md:text-6xl font-extrabold text-white tracking-tight leading-tight">
+            Rebahan Aja, <br> Biar <span class="text-blue-500">KostQu</span> Yang Kerja.
+        </h1>
+        
+        <p class="text-lg text-gray-300 max-w-2xl mx-auto">
+            Gak perlu keliling panas-panasan. Cukup login, pilih kamar, dan bayar. Hidup anak kost gak pernah semudah ini.
+        </p>
 
-    {{-- HERO SECTION --}}
-    <section class="relative z-10 pt-20 pb-32 container mx-auto px-6">
-        <div class="flex flex-col md:flex-row items-center">
+        {{-- BAGIAN TENGAH: TOMBOL LOGIN & DAFTAR --}}
+        <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center items-center">
             
-            {{-- KOLOM KIRI: TEKS (Powerfull Typography) --}}
-            <div class="w-full md:w-3/5 mb-12 md:mb-0 relative z-20">
-                <div class="inline-block px-4 py-2 mb-6 text-sm font-semibold text-blue-700 bg-blue-100 rounded-full">
-                    🚀 Solusi Cari Kost No. 1
-                </div>
-                <h1 class="text-5xl md:text-7xl font-extrabold text-gray-900 leading-[1.1] mb-6">
-                    Rebahan Aja, <br>
-                    Biar <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">KostQu</span> <br>
-                    Yang Kerja.
-                </h1>
-                <p class="text-lg text-gray-600 mb-8 max-w-lg leading-relaxed">
-                    Platform pencarian kost modern dengan data terverifikasi. 
-                    Pilih hunian impianmu, survei online, dan pindahan hari ini juga.
-                </p>
-                <div class="flex flex-col sm:flex-row gap-4">
-                    <a href="/login" 
-                       class="px-8 py-4 text-white font-bold bg-blue-600 rounded-full shadow-lg hover:bg-blue-700 hover:shadow-blue-500/30 hover:-translate-y-1 transition-all duration-300 text-center">
-                        Cari Kamar Sekarang
-                    </a>
-                    <a href="#cara-kerja" 
-                       class="px-8 py-4 text-blue-700 font-bold bg-white border border-blue-200 rounded-full hover:bg-blue-50 transition-all duration-300 text-center">
-                        Pelajari Cara Kerja
-                    </a>
-                </div>
-            </div>
+            {{-- Tombol Login Utama --}}
+            <a href="{{ route('login') }}" class="px-8 py-4 text-lg font-bold text-white bg-blue-600 rounded-full shadow-lg shadow-blue-600/30 hover:bg-blue-700 transition transform hover:scale-105 flex items-center gap-3">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path></svg>
+                Login Segera
+            </a>
 
-            {{-- KOLOM KANAN: GAMBAR (Rotated & Floating Effect) --}}
-            <div class="w-full md:w-2/5 relative">
-                {{-- Gunakan gambar yang bagus di sini (disarankan rasio Portrait/Kotak) --}}
-                <div class="relative z-10 transform rotate-3 hover:rotate-0 transition-all duration-500 ease-out">
-                    <img src="{{ asset('images/bg-login.jpg') }}" 
-                         alt="Hero Kost" 
-                         class="w-full h-[500px] object-cover rounded-[2.5rem] shadow-2xl border-4 border-white">
-                    
-                    {{-- Floating Badge --}}
-                    <div class="absolute -bottom-6 -left-6 bg-white p-4 rounded-2xl shadow-xl animate-bounce" style="animation-duration: 3s;">
-                        <div class="flex items-center gap-3">
-                            <div class="bg-green-100 p-2 rounded-full text-2xl">🔥</div>
-                            <div>
-                                <p class="font-bold text-gray-800">500+ Unit</p>
-                                <p class="text-xs text-gray-500">Siap Huni</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {{-- Pattern Dots di belakang gambar --}}
-                <div class="absolute -z-10 bottom-0 right-0 translate-x-10 translate-y-10">
-                    <svg width="100" height="100" viewBox="0 0 100 100" fill="none">
-                        <circle cx="2" cy="2" r="2" fill="#CBD5E1"/>
-                        <circle cx="20" cy="2" r="2" fill="#CBD5E1"/>
-                        <circle cx="2" cy="20" r="2" fill="#CBD5E1"/>
-                        {{-- Anggap aja pattern titik-titik --}}
-                    </svg>
-                </div>
-            </div>
+            {{-- Tombol Daftar (Secondary) --}}
+            <a href="{{ route('register') }}" class="px-8 py-4 text-lg font-bold text-white bg-white/10 backdrop-blur-md border border-white/20 rounded-full hover:bg-white/20 transition flex items-center gap-2">
+                Belum Punya Akun?
+            </a>
 
-        </div>
-    </section>
-</div>
-
-{{-- FEATURE SECTION (FLOATING CARDS) --}}
-{{-- Margin Top negatif (-mt-20) membuat section ini "menumpuk" di atas Hero --}}
-<section class="relative z-30 container mx-auto px-6 -mt-20 mb-20">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {{-- Card 1 --}}
-        <div class="bg-white p-8 rounded-3xl shadow-xl shadow-gray-200/50 hover:-translate-y-2 transition-transform duration-300 border border-gray-100">
-            <div class="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center text-3xl mb-4 text-blue-600">🛡️</div>
-            <h3 class="text-xl font-bold text-gray-900 mb-2">Terverifikasi Total</h3>
-            <p class="text-gray-500 text-sm leading-relaxed">Data kost divalidasi manual oleh tim lapangan. No tipu-tipu club.</p>
-        </div>
-        {{-- Card 2 --}}
-        <div class="bg-white p-8 rounded-3xl shadow-xl shadow-gray-200/50 hover:-translate-y-2 transition-transform duration-300 border border-gray-100">
-            <div class="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center text-3xl mb-4 text-blue-600">⚡</div>
-            <h3 class="text-xl font-bold text-gray-900 mb-2">Respon Kilat</h3>
-            <p class="text-gray-500 text-sm leading-relaxed">Hubungi pemilik langsung tanpa perantara. Chat dibalas secepat kilat.</p>
-        </div>
-        {{-- Card 3 --}}
-        <div class="bg-white p-8 rounded-3xl shadow-xl shadow-gray-200/50 hover:-translate-y-2 transition-transform duration-300 border border-gray-100">
-            <div class="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center text-3xl mb-4 text-blue-600">💳</div>
-            <h3 class="text-xl font-bold text-gray-900 mb-2">Transaksi Aman</h3>
-            <p class="text-gray-500 text-sm leading-relaxed">Sistem pembayaran terpusat. Uang aman sampai kunci di tanganmu.</p>
         </div>
     </div>
 </section>
 
+{{-- WHY CHOOSE US --}}
+<section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl font-bold text-gray-900">Kenapa Harus KostQu?</h2>
+            <p class="mt-4 text-gray-500">Kami beda dari yang lain, cek kelebihannya.</p>
+        </div>
 
-{{-- KAMAR POPULER SECTION --}}
-{{-- Container Grid (Pastikan ini ada di wrapper lu) --}}
-<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-
-    {{-- Pake $kamar (sesuai controller) --}}
-    @forelse($kamar as $item)
-
-        <div class="group bg-white rounded-3xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300 hover:-translate-y-1">
-            
-            {{-- Gambar (Teaser Visual) --}}
-            <div class="relative">
-                <img src="{{ $item->foto ? asset('storage/' . $item->foto) : asset('images/room-default.jpg') }}" 
-                     class="object-cover w-full h-56 group-hover:scale-105 transition duration-500">
-                
-                {{-- Badge Status --}}
-                <span class="absolute top-4 right-4 bg-blue-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-sm uppercase">
-                    {{ $item->tipe_kamar }}
-                </span>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+            <div class="p-8 bg-gray-50 rounded-2xl border border-gray-100 hover:shadow-xl transition duration-300 text-center group">
+                <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Terverifikasi Total</h3>
+                <p class="text-gray-600">Semua data kost sudah dicek oleh tim kami. Anti tipu-tipu club.</p>
             </div>
+            <div class="p-8 bg-gray-50 rounded-2xl border border-gray-100 hover:shadow-xl transition duration-300 text-center group">
+                <div class="w-16 h-16 bg-orange-100 text-orange-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Respon Kilat</h3>
+                <p class="text-gray-600">Admin dan pemilik kost siap respon chat kamu 24/7 (kalau gak tidur).</p>
+            </div>
+            <div class="p-8 bg-gray-50 rounded-2xl border border-gray-100 hover:shadow-xl transition duration-300 text-center group">
+                <div class="w-16 h-16 bg-green-100 text-green-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Transaksi Aman</h3>
+                <p class="text-gray-600">Pembayaran aman, transparan, dan bukti transaksi langsung masuk email.</p>
+            </div>
+        </div>
+    </div>
+</section>
 
-            <div class="p-6">
-                <h3 class="text-xl font-bold text-gray-900 mb-2">
-                    {{ $item->tipe_kamar }} - {{ $item->nomor_kamar }}
-                </h3>
-                
-                {{-- Deskripsi Terbatas (Teaser) --}}
-                <p class="text-sm text-gray-500 mb-4 line-clamp-2">
-                    {{ Str::limit($item->deskripsi, 50) }}...
-                </p>
+{{-- REKOMENDASI KAMAR --}}
+<section class="py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-end mb-12">
+            <div>
+                <h2 class="text-3xl font-bold text-gray-900">Rekomendasi Sultan</h2>
+                <p class="mt-2 text-gray-500">Pilihan kamar terbaik minggu ini.</p>
+            </div>
+            <a href="{{ route('pencarian') }}" class="hidden md:inline-flex items-center text-blue-600 font-semibold hover:text-blue-700">
+                Lihat Semua <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+            </a>
+        </div>
 
-                <div class="flex items-center justify-between pt-4 border-t border-gray-50">
-                    <div>
-                        <span class="text-xs text-gray-400">Mulai dari</span>
-                        <p class="text-lg font-bold text-blue-600">
-                            Rp {{ number_format($item->harga, 0, ',', '.') }}
-                        </p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="bg-white rounded-2xl shadow-sm hover:shadow-2xl transition duration-300 overflow-hidden group border border-gray-100">
+                <div class="relative">
+                    <img src="https://images.unsplash.com/photo-1598928506311-c55ded91a20c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="w-full h-56 object-cover group-hover:scale-110 transition duration-500">
+                    <div class="absolute top-4 left-4 bg-white/90 backdrop-blur text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide text-gray-800">Putra</div>
+                </div>
+                <div class="p-6">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="text-xl font-bold text-gray-900">Suite - A167</h3>
+                        <span class="flex items-center text-sm text-gray-500">⭐ 4.8</span>
                     </div>
-                    
-                    {{-- LOGIKA JEBAKAN LOGIN --}}
-                    @auth
-                        {{-- Kalau User Udah Login: Tombol "Pesan" Aktif --}}
-                        {{-- Ganti route('booking') sesuai route asli lu nanti --}}
-                        <a href="{{ url('/dashboard') }}" class="bg-green-600 text-white px-4 py-2 rounded-xl hover:bg-green-700 transition shadow-lg shadow-green-200">
-                            Pesan ✅
-                        </a>
-                    @else
-                        {{-- Kalau Masih Tamu (Guest): Lempar ke Login --}}
-                        <a href="{{ route('login') }}" class="bg-gray-900 text-white px-4 py-2 rounded-xl hover:bg-blue-600 transition shadow-lg group-hover:shadow-blue-200">
-                            Lihat 🔒
-                        </a>
-                    @endauth
-
+                    <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+                        <div class="text-blue-600 font-bold text-lg">Rp 531.800</div>
+                        <a href="#" class="px-4 py-2 bg-gray-900 text-white text-sm font-bold rounded-lg hover:bg-gray-800 transition">Pesan</a>
+                    </div>
+                </div>
+            </div>
+             <div class="bg-white rounded-2xl shadow-sm hover:shadow-2xl transition duration-300 overflow-hidden group border border-gray-100">
+                <div class="relative">
+                    <img src="https://images.unsplash.com/photo-1555854877-bab0e564b8d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="w-full h-56 object-cover group-hover:scale-110 transition duration-500">
+                    <div class="absolute top-4 left-4 bg-white/90 backdrop-blur text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide text-gray-800">Campur</div>
+                </div>
+                <div class="p-6">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="text-xl font-bold text-gray-900">Standard - A182</h3>
+                        <span class="flex items-center text-sm text-gray-500">⭐ 4.5</span>
+                    </div>
+                    <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+                        <div class="text-blue-600 font-bold text-lg">Rp 612.752</div>
+                        <a href="#" class="px-4 py-2 bg-gray-900 text-white text-sm font-bold rounded-lg hover:bg-gray-800 transition">Pesan</a>
+                    </div>
+                </div>
+            </div>
+             <div class="bg-white rounded-2xl shadow-sm hover:shadow-2xl transition duration-300 overflow-hidden group border border-gray-100">
+                <div class="relative">
+                    <img src="https://images.unsplash.com/photo-1505691938895-1758d7feb511?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="w-full h-56 object-cover group-hover:scale-110 transition duration-500">
+                    <div class="absolute top-4 left-4 bg-white/90 backdrop-blur text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide text-gray-800">Putri</div>
+                </div>
+                <div class="p-6">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="text-xl font-bold text-gray-900">Suite - A176</h3>
+                        <span class="flex items-center text-sm text-gray-500">⭐ 5.0</span>
+                    </div>
+                    <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+                        <div class="text-blue-600 font-bold text-lg">Rp 892.159</div>
+                        <a href="#" class="px-4 py-2 bg-gray-900 text-white text-sm font-bold rounded-lg hover:bg-gray-800 transition">Pesan</a>
+                    </div>
                 </div>
             </div>
         </div>
-
-    @empty
-        <div class="col-span-3 text-center py-12">
-            <p class="text-gray-500">Belum ada kamar yang tersedia.</p>
+        
+        <div class="mt-12 text-center md:hidden">
+            <a href="{{ route('pencarian') }}" class="inline-block px-6 py-3 bg-white border border-gray-300 text-gray-700 font-bold rounded-lg hover:bg-gray-50 transition">
+                Lihat Semua Kamar
+            </a>
         </div>
-    @endforelse
+    </div>
+</section>
 
-</div>
-
-{{-- CARA KERJA (Refined) --}}
-<section id="cara-kerja" class="py-20 bg-gray-50">
-    <div class="container mx-auto px-6 text-center">
-        <h2 class="text-3xl font-extrabold mb-12">Cara Kerja Sistem 🛠️</h2>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            <div class="bg-white p-8 rounded-3xl shadow-sm hover:shadow-md transition duration-300">
-                <div class="text-4xl font-black text-gray-200 mb-4">01</div>
-                <h3 class="text-xl font-bold mb-2">Daftar Akun</h3>
-                <p class="text-gray-500 text-sm">Buat akun dalam 30 detik. Cuma butuh email.</p>
+{{-- CARA KERJA SISTEM --}}
+<section class="py-20 bg-white border-t border-gray-100">
+    <div class="max-w-4xl mx-auto px-4 text-center">
+        <h2 class="text-3xl font-bold text-gray-900 mb-12">Cara Kerja Sistem 🛠️</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+            <div class="hidden md:block absolute top-12 left-0 w-full h-1 bg-gray-100 -z-10"></div>
+            <div class="bg-white p-6 relative">
+                <div class="w-24 h-24 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl font-bold border-4 border-white shadow-sm">01</div>
+                <h3 class="font-bold text-lg mb-2">Login / Daftar</h3>
+                <p class="text-gray-500 text-sm">Masuk dulu bos, biar transaksi aman.</p>
             </div>
-            <div class="bg-white p-8 rounded-3xl shadow-sm hover:shadow-md transition duration-300 relative overflow-hidden">
-                <div class="absolute top-0 left-0 w-full h-1 bg-blue-500"></div> {{-- Accent Line --}}
-                <div class="text-4xl font-black text-blue-100 mb-4">02</div>
-                <h3 class="text-xl font-bold mb-2 text-blue-600">Pilih & Booking</h3>
-                <p class="text-gray-500 text-sm">Pilih kamar, ajukan sewa, tunggu konfirmasi pemilik.</p>
+            <div class="bg-white p-6 relative">
+                 <div class="w-24 h-24 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl font-bold border-4 border-white shadow-sm">02</div>
+                <h3 class="font-bold text-lg mb-2">Pilih Kamar</h3>
+                <p class="text-gray-500 text-sm">Cari yang sesuai selera dan isi dompet.</p>
             </div>
-            <div class="bg-white p-8 rounded-3xl shadow-sm hover:shadow-md transition duration-300">
-                <div class="text-4xl font-black text-gray-200 mb-4">03</div>
-                <h3 class="text-xl font-bold mb-2">Bayar & Masuk</h3>
-                <p class="text-gray-500 text-sm">Bayar lewat aplikasi, dan langsung bawa koper.</p>
+            <div class="bg-white p-6 relative">
+                 <div class="w-24 h-24 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl font-bold border-4 border-white shadow-sm">03</div>
+                <h3 class="font-bold text-lg mb-2">Bayar</h3>
+                <p class="text-gray-500 text-sm">Transfer dan siap-siap pindahan.</p>
             </div>
         </div>
     </div>

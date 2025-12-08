@@ -56,26 +56,42 @@ Route::middleware(['auth', 'verified', 'role:penyewa'])->prefix('penyewa')->grou
 
     Route::get('/dashboard', [PenyewaDashboardController::class, 'index'])->name('penyewa.dashboard');
 
-    Route::get('kamar/{id}/pesan' ,[BookingPenyewaController::class, 'index'] )->name('penyewa.pesan');
+    // Ganti 'index' jadi 'create'
+    Route::get('kamar/{id}/pesan', [BookingPenyewaController::class, 'create'])->name('penyewa.pesan');
+
+    // Store tetep Store (Udah bener)
     Route::post('kamar/{id}/pesan', [BookingPenyewaController::class, 'store'])->name('kamar.pesan');
 
-    // --- PERBAIKAN DI SINI ---
-    
-    // 1. Rute untuk Menu Header (Riwayat Pembayaran) - JANGAN PAKE {id}
-    Route::get('/riwayat-pembayaran', [PembayaranController::class, 'index'])->name('penyewa.pembayaran');
+    // Rute untuk nampilin Form Bayar (Dipanggil oleh redirect Booking)
+Route::get('booking/{id}/pembayaran', [PembayaranController::class, 'create'])
+    ->name('penyewa.pembayaran.create'); // <--- INI KUNCI YG HARUS ADA
 
-    // 2. Rute untuk Proses Bayar (Action) - Ini baru butuh {id}
-    Route::post('booking/{id}/pembayaran', [PembayaranController::class, 'store'])->name('penyewa.pembayaran.store');
-    
-    // 3. Halaman Sukses
+// Rute untuk memproses Simpan Bukti Bayar (Dipanggil dari Form di create.blade.php)
+Route::post('booking/{id}/pembayaran', [PembayaranController::class, 'store'])
+    ->name('penyewa.pembayaran.store');
+
     Route::get('pembayaran/{id}/sukses', [PembayaranController::class, 'success'])
     ->name('penyewa.pembayaran.success');
-    
-    Route::get('/search', [DashboardUser::class, 'index'])->name('pencarian');
+
+    // PENCAIRAN KAMAR (Search + Filter)
+    Route::get('/pencarian', [PenyewaDashboardController::class, 'pencarian'])->name('pencarian');
+
+    Route::get('/profile', [PenyewaProfileController::class, 'index'])->name('profile');
+    Route::get('/profile/edit', [PenyewaProfileController::class, 'edit'])->name('profile.edit');
+    Route::post('/profile/update', [PenyewaProfileController::class, 'update'])->name('profile.update');
+
+    // Ubah Password
+    Route::get('/profile/password', [PenyewaProfileController::class, 'password'])->name('profile.password');
+    Route::post('/profile/password/update', [PenyewaProfileController::class, 'updatePassword'])->name('profile.password.update');
+
+   // 1. Jalur ke Riwayat (Index)
+    Route::get('/riwayat-pembayaran', [PembayaranController::class, 'index'])
+    ->name('penyewa.riwayat.pembayaran');
+
+
 });
 
-
-// ---------- DASHBOARD ADMIN -----------
+// --------- DASHBOARD ADMIN -----------
 Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
 
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
@@ -91,3 +107,8 @@ Route::get('booking/{id}/pembayaran',[PembayaranController::class, 'create'])->n
     Route::resource('penyewa', PenyewaController::class);
 });
 
+// --- HALAMAN FOOTER (STATIS) ---
+// Gak perlu controller, langsung view aja biar cepet
+Route::view('/tentang-kami', 'footer.tentang')->name('footer.tentang');
+Route::view('/kebijakan-privasi', 'footer.privasi')->name('footer.privasi');
+Route::view('/syarat-ketentuan', 'footer.syarat')->name('footer.syarat');

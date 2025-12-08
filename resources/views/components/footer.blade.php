@@ -17,12 +17,26 @@
             </div>
 
             <div>
-                <h3 class="font-semibold mb-2 text-white">Informasi</h3>
-                <ul class="space-y-1">
-                    <li><a href="#" class="hover:underline">Tentang Kami</a></li>
-                    <li><a href="#" class="hover:underline">Kebijakan Privasi</a></li>
-                    <li><a href="#" class="hover:underline">Syarat dan Ketentuan</a></li>
-                </ul>
+<ul class="space-y-2">
+    <li>
+        <a href="{{ route('footer.tentang') }}" 
+           class="text-gray-400 hover:text-blue-400 transition-colors duration-300">
+           Tentang Kami
+        </a>
+    </li>
+    <li>
+        <a href="{{ route('footer.privasi') }}" 
+           class="text-gray-400 hover:text-blue-400 transition-colors duration-300">
+           Kebijakan Privasi
+        </a>
+    </li>
+    <li>
+        <a href="{{ route('footer.syarat') }}" 
+           class="text-gray-400 hover:text-blue-400 transition-colors duration-300">
+           Syarat dan Ketentuan
+        </a>
+    </li>
+</ul>
             </div>
 
             <div>
