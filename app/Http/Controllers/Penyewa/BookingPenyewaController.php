@@ -9,18 +9,18 @@ use Illuminate\Http\Request;
 
 class BookingPenyewaController extends Controller
 {
-// JANGAN 'index', TAPI 'create' KARENA INI BUAT NAMPILIN FORM
-public function create($id) 
-{
-    $kamar = Kamar::findOrFail($id);
-    return view('penyewa.kamar.pesan', compact('kamar'));
-}
+    public function create($id)
+    {
+        $kamar = Kamar::findOrFail($id);
+
+        return view('penyewa.kamar.pesan', compact('kamar'));
+    }
 
     public function store(Request $request, $id)
     {
         // Validasi input booking
         $request->validate([
-            'tgl_mulai'   => 'required|date|after_or_equal:today',
+            'tgl_mulai' => 'required|date|after_or_equal:today',
             'tgl_selesai' => 'required|date|after:tgl_mulai',
             'tgl_booking' => 'required|date',
         ]);
@@ -30,17 +30,17 @@ public function create($id)
 
         // Buat booking baru
         $booking = Booking::create([
-            'kamar_id'    => $kamar->id,
-            'user_id'     => auth()->id(),
-            'tgl_mulai'   => $request->tgl_mulai,
+            'kamar_id' => $kamar->id,
+            'user_id' => auth()->id(),
+            'tgl_mulai' => $request->tgl_mulai,
             'tgl_selesai' => $request->tgl_selesai,
             'tgl_booking' => $request->tgl_booking,
-            'status'      => 'pending', // Menunggu pembayaran
+            'status' => 'pending', // Menunggu pembayaran
         ]);
 
         // Redirect ke halaman pembayaran berdasarkan ID booking
         return redirect()
-        ->route('penyewa.pembayaran.create', ['id' => $booking->id]) // <--- TARGET BARU!
-        ->with('success', 'Booking Berhasil! Selesaikan pembayaran.');
-        }
+            ->route('penyewa.pembayaran.create', ['id' => $booking->id])
+            ->with('success', 'Booking Berhasil! Selesaikan pembayaran.');
+    }
 }
