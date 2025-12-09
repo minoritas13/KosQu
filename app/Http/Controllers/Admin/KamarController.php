@@ -28,7 +28,7 @@ class KamarController extends Controller
             'harga' => 'required|numeric|min:0',
             'status' => 'required|in:tersedia,terisi,perbaikan',
             'deskripsi' => 'nullable|string',
-            'foto' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'foto' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
         ]);
 
         $fotoPath = null;

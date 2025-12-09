@@ -39,6 +39,10 @@
                             <span class="px-3 py-1 text-sm text-white bg-green-700 rounded-full">
                                 Tersedia
                             </span>
+                        @elseif ($kamar->status == 'perbaikan')
+                            <span class="px-3 py-1 text-sm text-white bg-yellow-700 rounded-full">
+                                Perbaikan
+                            </span>
                         @else
                             <span class="px-3 py-1 text-sm text-white bg-red-700 rounded-full">
                                 Terisi
