@@ -47,14 +47,6 @@ class PenyewaDashboardController extends Controller
         }
 
         // =============================
-        // 🧩 FILTER FASILITAS
-        // (dicari dalam deskripsi)
-        // =============================
-        if ($request->filled('fasilitas')) {
-            $query->where('deskripsi', 'LIKE', '%'.$request->fasilitas.'%');
-        }
-
-        // =============================
         // 📌 URUTKAN BERDASARKAN WAKTU
         // =============================
         if ($request->filled('urutkan')) {

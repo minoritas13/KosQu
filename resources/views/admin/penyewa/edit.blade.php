@@ -23,7 +23,7 @@
             <input type="text" name="no_hp" value="{{ $penyewa->no_hp }}" class="w-full p-2 border" required>
         </div>
 
-        <button class="px-4 py-2 text-white bg-blue-600 rounded">Update</button>
+        <button class="px-4 py-2 text-white bg-yellow-600 rounded">Update</button>
     </form>
 </div>
 @endsection

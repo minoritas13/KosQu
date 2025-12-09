@@ -13,30 +13,38 @@ class PembayaranController extends Controller
     //  HALAMAN PEMBAYARAN
     // -------------------------------
     public function index()
-{
-    $userId = \Illuminate\Support\Facades\Auth::id();
+    {
+        // Ambil semua pembayaran milik user yang sedang login
+        $pembayarans = Pembayaran::whereHas('booking', function ($query) {
+            $query->where('user_id', auth()->id());
+        })
+            ->with(['booking.kamar'])
+            ->orderBy('created_at', 'desc')
+            ->get();
 
-    // Logic Riwayat (Ambil banyak data)
-    $pembayarans = \App\Models\Pembayaran::whereHas('booking', function($q) use ($userId) {
-                        $q->where('user_id', $userId);
-                    })
-                    ->with(['booking.kamar'])
-                    ->orderBy('created_at', 'desc')
-                    ->get();
+        // Perhitungan dipindahkan ke Controller
+        $totalPengeluaran = $pembayarans->where('status', 'selesai')->sum('jumlah_bayar');
+        $tagihanPending = $pembayarans->where('status', 'pending')->count();
+        $jumlahSelesai = $pembayarans->where('status', 'selesai')->count();
 
-    // Lempar ke View Dashboard/Riwayat
-    return view('penyewa.pembayaran.index', compact('pembayarans'));
-}
+        // Kirim ke Blade
+        return view('penyewa.pembayaran.index', [
+            'pembayarans' => $pembayarans,
+            'totalPengeluaran' => $totalPengeluaran,
+            'tagihanPending' => $tagihanPending,
+            'jumlahSelesai' => $jumlahSelesai,
+        ]);
+    }
 
-// 2. FUNGSI FORM BAYAR (Butuh $id, ini code lama lu tadi)
-public function create($id)
-{
-    // Logic Form (Ambil 1 data booking)
-    $booking = \App\Models\Booking::with('kamar')->findOrFail($id);
+    // 2. FUNGSI FORM BAYAR (Butuh $id, ini code lama lu tadi)
+    public function create($id)
+    {
+        // Logic Form (Ambil 1 data booking)
+        $booking = Booking::with('kamar')->findOrFail($id);
 
-    // Lempar ke View Form Bayar (Nanti kita siapin filenya)
-    return view('penyewa.pembayaran.create', compact('booking'));
-}
+        // Lempar ke View Form Bayar (Nanti kita siapin filenya)
+        return view('penyewa.pembayaran.create', compact('booking'));
+    }
 
     public function store(Request $request, $id)
     {
@@ -63,12 +71,12 @@ public function create($id)
 
         // Simpan pembayaran ke DB
         $pembayaran = Pembayaran::create([
-            'booking_id'    => $booking->id,
-            'tggl_bayar'    => now(),
-            'jumlah_bayar'  => $jumlah_bayar,
-            'metode_bayar'  => $request->metode_bayar,
-            'bukti_bayar'   => $buktiPath,
-            'status'        => 'pending',
+            'booking_id' => $booking->id,
+            'tgl_bayar' => now(),
+            'jumlah_bayar' => $jumlah_bayar,
+            'metode_bayar' => $request->metode_bayar,
+            'bukti_bayar' => $buktiPath,
+            'status' => 'pending',
         ]);
 
         // Update status booking
@@ -80,7 +88,7 @@ public function create($id)
 
         // Update status kamar → terisi
         $booking->kamar->update([
-            'status' => 'terisi'
+            'status' => 'terisi',
         ]);
 
         return redirect()
@@ -88,13 +96,13 @@ public function create($id)
             ->with('success', 'Pembayaran berhasil dicatat!');
     }
 
-
     // -------------------------------
     // HALAMAN SUKSES PEMBAYARAN
     // -------------------------------
     public function success($id)
     {
         $booking = Booking::with(['kamar', 'pembayaran'])->findOrFail($id);
+
         return view('penyewa.pembayaran.success', compact('booking'));
     }
 }

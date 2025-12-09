@@ -12,8 +12,8 @@ return new class extends Migration {
             $table->date('tgl_bayar');
             $table->decimal('jumlah_bayar', 12, 2);
             $table->enum('metode_bayar', ['transfer', 'cash', 'e-wallet']);
-            $table->enum('status', ['pending', 'selesai'])->default('pending');
-            $table->string('bukti_bayar')->nullable(); 
+            $table->enum('status', ['pending', 'selesai','batal'])->default('pending');
+            $table->string('bukti_bayar')->nullable();
             $table->timestamps();
 
             // Foreign key

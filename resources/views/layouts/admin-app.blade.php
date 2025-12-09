@@ -18,7 +18,7 @@
     @endauth
 
     {{-- KONTEN --}}
-    <main class="flex-grow ml-64 p-8">
+    <main class="flex-grow p-8 ml-64">
         @yield('content')
     </main>
 

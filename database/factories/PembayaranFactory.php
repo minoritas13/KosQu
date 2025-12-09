@@ -15,7 +15,7 @@ class PembayaranFactory extends Factory
             'booking_id' => null,
             'jumlah_bayar' => $this->faker->numberBetween(500000, 2000000),
             'metode_bayar' => $this->faker->randomElement(['transfer', 'e-wallet', 'cash']),
-            'status' => $this->faker->randomElement(['pending', 'selesai']),
+            'status' => $this->faker->randomElement(['pending', 'selesai','batal']),
             'tgl_bayar' => $this->faker->dateTimeBetween('-1 months', 'now'),
             'created_at' => now(),
             'updated_at' => now(),

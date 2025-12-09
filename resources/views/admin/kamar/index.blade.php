@@ -5,42 +5,42 @@
 
     <!-- HEADER -->
     <div class="flex items-center justify-between mb-6">
-        <h1 class="text-3xl font-bold text-gray-800">Daftar Kamar</h1>
+        <h1 class="text-3xl font-bold text-gray-700">Daftar Kamar</h1>
 
         <a href="{{ route('admin.kamar.create') }}"
-            class="px-4 py-2 text-white transition bg-blue-600 rounded-lg shadow-md hover:bg-blue-700">
-            + Tambah Kamar
+           class="px-4 py-2 text-white transition bg-purple-700 rounded-lg shadow-lg hover:bg-purple-800">
+           Tambah Kamar
         </a>
     </div>
 
     <!-- CARD WRAPPER -->
-    <div class="p-4 bg-white rounded-lg shadow-md">
+    <div class="p-4 bg-gray-800 border border-gray-700 shadow-lg rounded-xl">
 
-        <table class="w-full border-collapse table-auto">
+        <table class="w-full text-gray-300 table-auto">
             <thead>
-                <tr class="bg-gray-100 border-b">
-                    <th class="p-3 font-semibold text-left text-gray-700">No Kamar</th>
-                    <th class="p-3 font-semibold text-left text-gray-700">Tipe</th>
-                    <th class="p-3 font-semibold text-left text-gray-700">Harga</th>
-                    <th class="p-3 font-semibold text-center">Status</th>
-                    <th class="p-3 font-semibold text-center text-gray-700">Aksi</th>
+                <tr class="text-gray-200 bg-gray-700">
+                    <th class="p-3 text-left">No Kamar</th>
+                    <th class="p-3 text-left">Tipe</th>
+                    <th class="p-3 text-left">Harga</th>
+                    <th class="p-3 text-center">Status</th>
+                    <th class="p-3 text-center">Aksi</th>
                 </tr>
             </thead>
 
             <tbody>
                 @foreach ($kamars as $kamar)
-                <tr class="transition border-b hover:bg-gray-50">
+                <tr class="transition border-b border-gray-700 hover:bg-gray-700/40">
                     <td class="p-3">{{ $kamar->nomor_kamar }}</td>
                     <td class="p-3">{{ $kamar->tipe_kamar }}</td>
                     <td class="p-3">Rp{{ number_format($kamar->harga) }}</td>
 
                     <td class="p-3 text-center">
                         @if ($kamar->status == 'tersedia')
-                            <span class="px-3 py-1 text-sm text-green-700 bg-green-100 rounded-full">
+                            <span class="px-3 py-1 text-sm text-white bg-green-700 rounded-full">
                                 Tersedia
                             </span>
                         @else
-                            <span class="px-3 py-1 text-sm text-red-700 bg-red-100 rounded-full">
+                            <span class="px-3 py-1 text-sm text-white bg-red-700 rounded-full">
                                 Terisi
                             </span>
                         @endif
@@ -48,33 +48,24 @@
 
                     <td class="flex justify-center gap-3 p-3">
 
-                        <!-- Edit -->
                         <a href="{{ route('admin.kamar.edit', $kamar->id) }}"
-                            class="px-3 py-1 text-white bg-yellow-500 rounded shadow hover:bg-yellow-600">
-                            Edit
+                           class="px-3 py-1 text-purple-400 rounded-lg hover:text-purple-300">
+                           Edit
                         </a>
 
-                        <!-- Hapus -->
                         <form action="{{ route('admin.kamar.destroy', $kamar->id) }}"
                               method="POST"
-                              onsubmit="return confirm('Yakin ingin menghapus kamar ini?');">
+                              onsubmit="return confirm('Hapus kamar ini?')">
                             @csrf
                             @method('DELETE')
-                            <button class="px-3 py-1 text-white bg-red-600 rounded shadow hover:bg-red-700">
+                            <button class="px-3 py-1 text-red-500 hover:text-red-400">
                                 Hapus
                             </button>
                         </form>
+
                     </td>
                 </tr>
                 @endforeach
-
-                @if($kamars->count() == 0)
-                <tr>
-                    <td colspan="5" class="p-4 text-center text-gray-500">
-                        Tidak ada data kamar.
-                    </td>
-                </tr>
-                @endif
             </tbody>
         </table>
 

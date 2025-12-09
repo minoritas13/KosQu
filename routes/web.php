@@ -1,14 +1,16 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\AdminPembayaranController;
 use App\Http\Controllers\Admin\KamarController;
 use App\Http\Controllers\Admin\PenyewaController;
+use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Pembayaran\PembayaranController;
 use App\Http\Controllers\Penyewa\BookingPenyewaController;
-use App\Http\Controllers\Penyewa\PenyewaProfileController;
 use App\Http\Controllers\Penyewa\PenyewaDashboardController;
+use App\Http\Controllers\Penyewa\PenyewaProfileController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,25 +18,30 @@ use App\Http\Controllers\Penyewa\PenyewaDashboardController;
 |--------------------------------------------------------------------------
 */
 
-use App\Http\Controllers\DashboardUser;
-
-// Ganti namanya jadi 'home'
-Route::get('/', [DashboardUser::class, 'index'])->name('home');
-
+// root
+Route::get('/', function () {
+    return view('welcome');
+})->name('welcome');
 
 // ================= AUTH =================
-Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
+// Hanya bisa diakses oleh USER YANG BELUM LOGIN
+Route::middleware('guest')->group(function () {
 
-Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
-Route::post('/register', [AuthController::class, 'register'])->name('register.submit');
+    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
+
+    Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+    Route::post('/register', [AuthController::class, 'register'])->name('register.submit');
+
+});
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // --- TAMBAHAN PROFILE (SISIPIN DI SINI) ---
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'edit'])->name('profile');
-    Route::put('/profile', [App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/profile', [PenyewaProfileController::class, 'edit'])->name('profile');
+    Route::put('/profile', [PenyewaProfileController::class, 'update'])->name('profile.update');
 });
+
 // ================ EMAIL VERIFICATION ================
 Route::middleware('auth')->group(function () {
 
@@ -63,15 +70,15 @@ Route::middleware(['auth', 'verified', 'role:penyewa'])->prefix('penyewa')->grou
     Route::post('kamar/{id}/pesan', [BookingPenyewaController::class, 'store'])->name('kamar.pesan');
 
     // Rute untuk nampilin Form Bayar (Dipanggil oleh redirect Booking)
-Route::get('booking/{id}/pembayaran', [PembayaranController::class, 'create'])
-    ->name('penyewa.pembayaran.create'); // <--- INI KUNCI YG HARUS ADA
+    Route::get('booking/{id}/pembayaran', [PembayaranController::class, 'create'])
+        ->name('penyewa.pembayaran.create');
 
-// Rute untuk memproses Simpan Bukti Bayar (Dipanggil dari Form di create.blade.php)
-Route::post('booking/{id}/pembayaran', [PembayaranController::class, 'store'])
-    ->name('penyewa.pembayaran.store');
+    // Rute untuk memproses Simpan Bukti Bayar (Dipanggil dari Form di create.blade.php)
+    Route::post('booking/{id}/pembayaran', [PembayaranController::class, 'store'])
+        ->name('penyewa.pembayaran.store');
 
     Route::get('pembayaran/{id}/sukses', [PembayaranController::class, 'success'])
-    ->name('penyewa.pembayaran.success');
+        ->name('penyewa.pembayaran.success');
 
     // PENCAIRAN KAMAR (Search + Filter)
     Route::get('/pencarian', [PenyewaDashboardController::class, 'pencarian'])->name('pencarian');
@@ -84,10 +91,9 @@ Route::post('booking/{id}/pembayaran', [PembayaranController::class, 'store'])
     Route::get('/profile/password', [PenyewaProfileController::class, 'password'])->name('profile.password');
     Route::post('/profile/password/update', [PenyewaProfileController::class, 'updatePassword'])->name('profile.password.update');
 
-   // 1. Jalur ke Riwayat (Index)
+    // Riwayat (Index)
     Route::get('/riwayat-pembayaran', [PembayaranController::class, 'index'])
-    ->name('penyewa.riwayat.pembayaran');
-
+        ->name('penyewa.riwayat.pembayaran');
 
 });
 
@@ -97,10 +103,14 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('ad
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
     Route::get('/pembayaran', [AdminPembayaranController::class, 'index'])->name('pembayaran');
-    Route::put('/pembayaran/konfirmasi/{id}', [AdminPembayaranController::class, 'konfirmasi'])
-        ->name('pembayaran.konfirmasi');
-Route::get('booking/{id}/pembayaran',[PembayaranController::class, 'create'])->name('penyewa.pembayaran.bayar');
 
+    Route::post('/pembayaran/konfirmasi/{id}', [AdminPembayaranController::class, 'konfirmasi'])
+        ->name('pembayaran.konfirmasi');
+
+    Route::post('/admin/pembayaran/batal/{id}', [AdminPembayaranController::class, 'batal'])
+        ->name('pembayaran.batal');
+
+    Route::get('booking/{id}/pembayaran', [AdminPembayaranController::class, 'create'])->name('penyewa.pembayaran.bayar');
 
     Route::resource('kamar', KamarController::class);
 
@@ -109,6 +119,7 @@ Route::get('booking/{id}/pembayaran',[PembayaranController::class, 'create'])->n
 
 // --- HALAMAN FOOTER (STATIS) ---
 // Gak perlu controller, langsung view aja biar cepet
+
 Route::view('/tentang-kami', 'footer.tentang')->name('footer.tentang');
 Route::view('/kebijakan-privasi', 'footer.privasi')->name('footer.privasi');
 Route::view('/syarat-ketentuan', 'footer.syarat')->name('footer.syarat');

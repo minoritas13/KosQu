@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Kamar;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class KamarController extends Controller
@@ -12,11 +12,11 @@ class KamarController extends Controller
     public function index()
     {
         $kamars = Kamar::latest()->get();
+
         return view('admin.kamar.index', compact('kamars'));
     }
 
-    public function create()
-    {
+    public function create(){
         return view('admin.kamar.create');
     }
 
@@ -28,16 +28,23 @@ class KamarController extends Controller
             'harga' => 'required|numeric|min:0',
             'status' => 'required|in:tersedia,terisi,perbaikan',
             'deskripsi' => 'nullable|string',
+            'foto' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
+        $fotoPath = null;
+
+        if ($request->hasFile('foto')) {
+            $fotoPath = $request->file('foto')->store('kamar', 'public');
+        }
+
         Kamar::create([
-            'id' => \Str::uuid(),
             'admin_id' => Auth::id(),
             'nomor_kamar' => $request->nomor_kamar,
             'tipe_kamar' => $request->tipe_kamar,
             'harga' => $request->harga,
             'status' => $request->status,
             'deskripsi' => $request->deskripsi,
+            'foto' => $fotoPath,
         ]);
 
         return redirect()->route('admin.kamar.index')
@@ -52,7 +59,7 @@ class KamarController extends Controller
     public function update(Request $request, Kamar $kamar)
     {
         $request->validate([
-            'nomor_kamar' => 'required|string|unique:kamar,nomor_kamar,' . $kamar->id,
+            'nomor_kamar' => 'required|string|unique:kamar,nomor_kamar,'.$kamar->id,
             'tipe_kamar' => 'required|string',
             'harga' => 'required|numeric|min:0',
             'status' => 'required|in:tersedia,terisi,perbaikan',
@@ -74,6 +81,7 @@ class KamarController extends Controller
     public function destroy(Kamar $kamar)
     {
         $kamar->delete();
+
         return redirect()->route('admin.kamar.index')
             ->with('success', 'Kamar berhasil dihapus!');
     }

@@ -10,11 +10,11 @@ return new class extends Migration {
             $table->uuid('id')->primary();
             $table->uuid('admin_id');
             $table->string('nomor_kamar')->unique();
-            $table->string('tipe_kamar'); // contoh: "Standard", "Deluxe"
+            $table->string('tipe_kamar');
             $table->decimal('harga', 12, 2);
             $table->enum('status', ['tersedia', 'terisi', 'perbaikan'])->default('tersedia');
             $table->text('deskripsi')->nullable();
-            $table->string('foto')->nullable(); 
+            $table->string('foto')->nullable();
             $table->timestamps();
 
             // Foreign key

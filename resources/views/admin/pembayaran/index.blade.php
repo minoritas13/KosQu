@@ -1,143 +1,93 @@
 @extends('layouts.admin-app')
 
 @section('content')
+    <div class="p-6">
 
-<div class="max-w-7xl mx-auto py-8 px-4">
+        <h1 class="mb-6 text-3xl font-bold text-gray-100">Kelola Pembayaran</h1>
 
-    {{-- CARD WRAPPER --}}
-    <div class="bg-white shadow-lg rounded-xl overflow-hidden">
+        <div class="p-4 bg-gray-800 border border-gray-700 shadow-lg rounded-xl">
 
-        {{-- HEADER --}}
-        <div class="bg-blue-600 px-6 py-4">
-            <h2 class="text-xl font-semibold text-white">Daftar Pembayaran Masuk</h2>
-        </div>
+            <table class="w-full text-gray-300 table-auto">
+                <thead>
+                    <tr class="text-gray-200 bg-gray-700">
+                        <th class="p-3 text-left">Nama Penyewa</th>
+                        <th class="p-3 text-left">No Kamar</th>
+                        <th class="p-3 text-left">Total Bayar</th>
+                        <th class="p-3 text-left">Tanggal</th>
+                        <th class="p-3 text-center">Status</th>
+                        <th class="p-3 text-center">Aksi</th>
+                    </tr>
+                </thead>
 
-        {{-- BODY --}}
-        <div class="p-6">
+                <tbody>
+                    @foreach ($pembayaran as $item)
+                        <tr class="transition border-b border-gray-700 hover:bg-gray-700/40">
 
-            {{-- NOTIFIKASI --}}
-            @if(session('success'))
-                <div class="mb-4 p-4 bg-green-100 border border-green-300 text-green-700 rounded-lg">
-                    {{ session('success') }}
-                </div>
-            @endif
-
-            {{-- TABLE WRAPPER --}}
-            <div class="overflow-x-auto">
-                <table class="min-w-full border border-gray-200 text-sm">
-
-                    <thead class="bg-gray-100">
-                        <tr>
-                            <th class="px-4 py-3 border">Tanggal</th>
-                            <th class="px-4 py-3 border">Booking</th>
-                            <th class="px-4 py-3 border">Jumlah</th>
-                            <th class="px-4 py-3 border">Metode</th>
-                            <th class="px-4 py-3 border">Status</th>
-                            <th class="px-4 py-3 border">Bukti</th>
-                            <th class="px-4 py-3 border">Aksi</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        @forelse($pembayaran as $data)
-                        <tr class="hover:bg-gray-50">
-
-                            {{-- Tanggal --}}
-                            <td class="px-4 py-3 border">
-                                {{ \Carbon\Carbon::parse($data->tggl_bayar)->format('d/m/Y H:i') }}
+                            <td class="p-3">
+                                {{ $item->booking->user->name ?? '-' }}
                             </td>
 
-                            {{-- Booking Info --}}
-                            <td class="px-4 py-3 border">
-                                <p class="font-semibold">#{{ $data->booking_id }}</p>
-                                <p class="text-gray-500 text-xs">
-                                    {{ $data->booking->kamar->tipe_kamar ?? 'Kamar tidak ditemukan' }}
-                                </p>
+                            <td class="p-3">
+                                {{ $item->booking->kamar->nomor_kamar ?? '-' }}
                             </td>
 
-                            {{-- Jumlah --}}
-                            <td class="px-4 py-3 border font-semibold text-green-700">
-                                Rp {{ number_format($data->jumlah_bayar, 0, ',', '.') }}
+                            <td class="p-3">
+                                Rp{{ number_format($item->jumlah_bayar) }}
                             </td>
 
-                            {{-- Metode --}}
-                            <td class="px-4 py-3 border capitalize">
-                                {{ $data->metode_bayar }}
+                            <td class="p-3">
+                                {{ \Carbon\Carbon::parse($item->created_at)->format('d-m-Y') }}
                             </td>
 
-                            {{-- Status --}}
-                            <td class="px-4 py-3 border">
-                                @if($data->status == 'pending')
-                                    <span class="px-2 py-1 text-xs font-medium bg-yellow-200 text-yellow-700 rounded">
-                                        Pending
-                                    </span>
-                                @else
-                                    <span class="px-2 py-1 text-xs font-medium bg-green-200 text-green-700 rounded">
+                            <td class="p-3 text-center">
+                                @if ($item->status == 'selesai')
+                                    <span class="px-3 py-1 text-sm text-white bg-green-700 rounded-full">
                                         Selesai
                                     </span>
-                                @endif
-                            </td>
-
-                            {{-- Bukti Bayar --}}
-                            <td class="px-4 py-3 border">
-                                @if($data->bukti_bayar)
-                                    <a href="{{ Storage::url($data->bukti_bayar) }}" target="_blank">
-                                        <img src="{{ Storage::url($data->bukti_bayar) }}"
-                                             class="w-20 h-20 object-cover rounded border">
-                                    </a>
+                                @elseif ($item->status == 'batal')
+                                    <span class="px-3 py-1 text-sm text-white bg-red-700 rounded-full">
+                                        Dibatalkan
+                                    </span>
                                 @else
-                                    <span class="text-gray-500 text-sm">Tidak ada</span>
+                                    <span class="px-3 py-1 text-sm text-gray-900 bg-yellow-400 rounded-full">
+                                        Menunggu
+                                    </span>
                                 @endif
                             </td>
 
-                            {{-- Aksi --}}
-                            <td class="px-4 py-3 border">
+                            <td class="flex justify-center gap-3 p-3">
 
-                                {{-- Jika masih pending --}}
-                                @if($data->status == 'pending')
-                                    <form action="{{ route('admin.pembayaran.konfirmasi', $data->id) }}"
-                                          method="POST"
-                                          onsubmit="return confirm('Konfirmasi pembayaran ini?')">
-
+                                @if ($item->status == 'pending')
+                                    {{-- KONFIRMASI --}}
+                                    <form action="{{ route('admin.pembayaran.konfirmasi', $item->id) }}" method="POST">
                                         @csrf
-                                        @method('PUT')
-
-                                        <button type="submit"
-                                            class="w-full text-center px-3 py-2 bg-green-600 hover:bg-green-700 text-white text-sm rounded-lg">
-                                            Konfirmasi ✓
+                                        <button class="px-3 py-1 text-purple-400 rounded-lg hover:text-purple-300">
+                                            Konfirmasi
                                         </button>
-
                                     </form>
 
-                                {{-- Jika sudah selesai --}}
+                                    {{-- BATALKAN --}}
+                                    <form action="{{ route('admin.pembayaran.batal', $item->id) }}" method="POST"
+                                        onsubmit="return confirm('Batalkan pembayaran ini?')">
+                                        @csrf
+                                        <button class="px-3 py-1 text-red-500 hover:text-red-400">
+                                            Batalkan
+                                        </button>
+                                    </form>
                                 @else
-                                    <button
-                                        class="w-full px-3 py-2 bg-gray-300 text-gray-600 text-sm rounded-lg cursor-not-allowed">
+                                    <p class="px-3 py-2 text-center text-gray-400 rounded-lg ">
                                         Diverifikasi
-                                    </button>
+                                    </p>
                                 @endif
 
                             </td>
 
                         </tr>
-                        @empty
-
-                        <tr>
-                            <td colspan="7" class="text-center py-6 text-gray-500">
-                                Belum ada pembayaran masuk.
-                            </td>
-                        </tr>
-
-                        @endforelse
-                    </tbody>
-
-                </table>
-            </div>
+                    @endforeach
+                </tbody>
+            </table>
 
         </div>
 
     </div>
-
-</div>
-
 @endsection

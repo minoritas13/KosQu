@@ -24,16 +24,6 @@
                     <option value="desc" {{ request('harga') == 'desc' ? 'selected' : '' }}>Termahal</option>
                 </select>
 
-                {{-- FILTER FASILITAS --}}
-                <select name="fasilitas"
-                    class="px-4 py-3 bg-white border border-gray-300 outline-none rounded-xl focus:ring-2 focus:ring-purple-400">
-                    <option value="">Fasilitas</option>
-                    <option value="AC" {{ request('fasilitas') == 'AC' ? 'selected' : '' }}>AC</option>
-                    <option value="Kamar Mandi Dalam" {{ request('fasilitas') == 'Kamar Mandi Dalam' ? 'selected' : '' }}>Kamar
-                        Mandi Dalam</option>
-                    <option value="Wifi" {{ request('fasilitas') == 'Wifi' ? 'selected' : '' }}>Wifi</option>
-                </select>
-
                 {{-- URUTKAN --}}
                 <select name="urutkan"
                     class="px-4 py-3 bg-white border border-gray-300 outline-none rounded-xl focus:ring-2 focus:ring-purple-400">
@@ -57,7 +47,7 @@
                     {{-- Gambar --}}
                     <div class="relative">
 
-                        <a href="#">
+                        <a href="{{ route('penyewa.pesan', $item->id) }}">
                             <img src="{{ $item->foto ? asset('storage/' . $item->foto) : 'https://via.placeholder.com/600x400?text=Picture' }}"
                                 class="object-cover w-full h-48">
                         </a>

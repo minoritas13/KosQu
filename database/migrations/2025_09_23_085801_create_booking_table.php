@@ -13,7 +13,7 @@ return new class extends Migration {
             $table->date('tgl_booking')->default(now());
             $table->date('tgl_mulai');
             $table->date('tgl_selesai');
-            $table->enum('status', ['pending', 'disetujui', 'dibatalkan'])->default('pending');
+            $table->enum('status', ['pending', 'disetujui', 'batal'])->default('pending');
             $table->timestamps();
 
             // Foreign key

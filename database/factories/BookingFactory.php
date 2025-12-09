@@ -17,7 +17,7 @@ class BookingFactory extends Factory
             'kamar_id' => null,
             'tgl_mulai' => $this->faker->dateTimeBetween('-2 months', 'now'),
             'tgl_selesai' => $this->faker->dateTimeBetween('now', '+2 months'),
-            'status' => $this->faker->randomElement(['pending', 'disetujui', 'dibatalkan']),
+            'status' => $this->faker->randomElement(['pending', 'disetujui', 'batal']),
             'created_at' => now(),
             'updated_at' => now(),
         ];

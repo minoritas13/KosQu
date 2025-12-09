@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\User;
 use App\Models\Kamar;
 use App\Models\Booking;
 use App\Models\Pembayaran;
@@ -15,6 +16,7 @@ class AdminDashboardController extends Controller
             'totalKamar' => Kamar::count(),
             'totalBooking' => Booking::count(),
             'totalPembayaran' => Pembayaran::count(),
+            'totalPenyewa' => User::count(),
         ]);
     }
 }
